@@ -1,0 +1,19 @@
+# data & artifacts
+data/raw/
+data/processed/
+models/
+reports/figures/
+
+# notebooks
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# macOS Finder junk
+.DS_Store
+
+#clone
+cic-ids-eda/

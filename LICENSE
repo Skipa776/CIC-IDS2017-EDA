@@ -1,0 +1,19 @@
+## License & Data
+
+### Code and notebooks
+
+All code and Jupyter notebooks in this repository are licensed under the
+[MIT License](./LICENSE).
+
+You are free to use, modify, and redistribute the code under the terms of
+that license.
+
+### Dataset (CICIDS2017)
+
+This project uses the CICIDS2017 dataset, which is distributed by the
+Canadian Institute for Cybersecurity under its own terms.
+
+- **The dataset is not included in this repository.**
+- You must download CICIDS2017 directly from its official source and agree to
+  their license/usage conditions.
+- Nothing in this repository re-licenses or changes the terms of the CICIDS2017 dataset.
