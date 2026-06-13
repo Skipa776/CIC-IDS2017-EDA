@@ -1,8 +1,8 @@
-# data & artifacts
-data/raw/
-data/processed/
-models/
-reports/figures/
+# data & artifacts (anchored to repo root: api/models/ must stay tracked)
+/data/raw/
+/data/processed/
+/models/
+/reports/figures/
 
 # notebooks
 .ipynb_checkpoints/
@@ -17,3 +17,12 @@ __pycache__/
 
 #clone
 cic-ids-eda/
+
+# IDE
+.idea/
+
+# vendored external repo (has its own .git)
+mcp/
+
+# machine-local Claude Code settings
+.claude/settings.local.json

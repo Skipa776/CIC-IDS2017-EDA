@@ -1,0 +1,85 @@
+================================================================================
+MODEL CARD: CICIDS2017 Layered Intrusion Detection Models (v2)
+================================================================================
+
+Document Version: 2.0
+Created: 2026-06-12
+Model Files: layer1_binary_classifier.joblib, layer2_multiclass_classifier.joblib
+Supersedes: v1.0 card for rf_multiclass_attack_classifier.joblib (model no longer shipped)
+
+================================================================================
+1. MODEL OVERVIEW
+================================================================================
+
+Architecture:       Two-layer LightGBM pipeline served by api/
+  Layer 1:          LGBMClassifier (binary: benign vs attack)
+                    num_leaves=31, max_depth=6, n_estimators=100, class_weight=balanced
+  Layer 2:          LGBMClassifier (14 attack types; invoked only when Layer 1 flags attack)
+                    num_leaves=63, max_depth=8, n_estimators=200, class_weight=balanced
+
+Input:              20 "fast features" (see models/feature_columns.json), scaled by
+                    models/feature_scaler.joblib (StandardScaler fit on training data only)
+Output:             is_attack, attack probability, attack type, MITRE ATT&CK mapping
+Inference:          ~0.45 ms total per flow (both layers, single sample)
+
+================================================================================
+2. TRAINING DATA
+================================================================================
+
+Dataset:            data/processed/cicids2017_clean_v2.parquet (2,519,262 flows)
+                    Built by scripts/build_dataset.py from the 8 raw MachineLearningCVE CSVs.
+                    v2 cleaning keeps Init_Win_bytes=-1 sentinel rows (v1 dropped 51% of all
+                    data), deduplicates exactly, removes contradictory labels, and normalizes
+                    the web-attack label encoding. Manifest: reports/dataset_v2_manifest.json
+
+Split:              Stratified 80/20 split FIRST; benign downsampled to 200k in the
+                    training portion only. Test set (503,853 flows) keeps the natural
+                    prevalence (16.9% attack), so PR metrics are deployment-comparable.
+
+================================================================================
+3. PERFORMANCE (test set, natural prevalence — model_metadata.json is authoritative)
+================================================================================
+
+Layer 1 (binary):
+  PR-AUC:           0.9997   (no-skill baseline = 0.169)
+  Precision:        0.982    (false-positive rate on benign: 0.4%)
+  Recall:           0.999
+  Per-attack recall: >= 0.93 for all classes except Infiltration (0.67, n=9)
+                    and SQL Injection (0.60, n=5); full table in metadata.
+
+Layer 1 cross-day holdout (train on other days, test on held-out days):
+  test Friday (Bot/PortScan/DDoS unseen):        PR-AUC 0.824  (no-skill 0.358)
+  test Wed+Thu (DoS family/web/Heartbleed unseen): PR-AUC 0.466  (no-skill 0.197)
+
+  NOTE: In CICIDS2017 each attack type occurs on exactly one day, so cross-day
+  performance measures generalization to UNSEEN ATTACK BEHAVIOR. These numbers,
+  not the random-split PR-AUC, are the realistic expectation for novel attacks.
+
+Layer 2 (multiclass, attacks only):
+  Macro F1:         0.910      Weighted F1: 0.997
+  Weakest classes:  Web Attack - XSS (F1 0.51), Web Attack - Brute Force (F1 0.58),
+                    Web Attack - Sql Injection (F1 0.67, n=5)
+
+================================================================================
+4. LIMITATIONS & INTENDED USE
+================================================================================
+
+- Trained and evaluated on a single 2017 lab-generated dataset with documented label
+  noise (Engelen et al. 2021). Absolute metrics do not transfer to other networks.
+- Random-split metrics are optimistic for novel attacks; see cross-day numbers above.
+- Web-attack identification (Layer 2) is weak; pair with WAF/application logs.
+- Ultra-rare classes (Heartbleed n=11, Infiltration n=36, SQLi n=21 in the full data)
+  have anecdotal-quality metrics.
+- Intended as a research/portfolio system, not a production security control.
+
+================================================================================
+5. REPRODUCIBILITY
+================================================================================
+
+  python scripts/build_dataset.py      # rebuild data/processed/cicids2017_clean_v2.parquet
+  python scripts/train_models.py       # retrain + write models/ artifacts and metadata
+  pytest tests/                        # 50 tests incl. API contract + MITRE mapping
+  python scripts/validate_eda_baseline.py --data data/processed/cicids2017_clean_v2.parquet --tag _v2
+
+All seeds fixed (random_state=42). Metrics quoted here are from
+models/model_metadata.json (version 2.0.0, trained 2026-06-12).

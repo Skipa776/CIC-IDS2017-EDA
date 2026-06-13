@@ -1,0 +1,200 @@
+{
+  "DoS Hulk": {
+    "technique_id": "T1498.001",
+    "technique_name": "Network Denial of Service: Direct Network Flood",
+    "tactic": "Impact",
+    "url": "https://attack.mitre.org/techniques/T1498/001/",
+    "mitigations": [
+      "M1037: Filter Network Traffic - Implement rate limiting and traffic filtering at network perimeter",
+      "M1035: Limit Access to Resource Over Network - Deploy WAF and CDN services with DDoS protection",
+      "Configure connection timeout limits for HTTP requests",
+      "Deploy DDoS mitigation services (Cloudflare, AWS Shield, Akamai)",
+      "Monitor for abnormal HTTP request patterns and implement alerting"
+    ]
+  },
+  "DoS GoldenEye": {
+    "technique_id": "T1498.001",
+    "technique_name": "Network Denial of Service: Direct Network Flood",
+    "tactic": "Impact",
+    "url": "https://attack.mitre.org/techniques/T1498/001/",
+    "mitigations": [
+      "M1037: Filter Network Traffic - Configure keep-alive timeout limits",
+      "Implement request rate limiting per source IP address",
+      "Use reverse proxy with connection pooling (nginx, HAProxy)",
+      "Enable HTTP request timeout configurations on web servers",
+      "Deploy application-layer DDoS protection solutions"
+    ]
+  },
+  "DoS Slowhttptest": {
+    "technique_id": "T1498.001",
+    "technique_name": "Network Denial of Service: Direct Network Flood",
+    "tactic": "Impact",
+    "url": "https://attack.mitre.org/techniques/T1498/001/",
+    "mitigations": [
+      "M1037: Filter Network Traffic - Set minimum data rate thresholds",
+      "Configure HTTP header and body timeout limits (5-10 seconds)",
+      "Use mod_reqtimeout (Apache) or equivalent timeout modules",
+      "Implement request body size limits on web servers",
+      "Monitor for slow-rate connection patterns and alert on anomalies"
+    ]
+  },
+  "DoS slowloris": {
+    "technique_id": "T1498.001",
+    "technique_name": "Network Denial of Service: Direct Network Flood",
+    "tactic": "Impact",
+    "url": "https://attack.mitre.org/techniques/T1498/001/",
+    "mitigations": [
+      "M1037: Filter Network Traffic - Limit concurrent connections per IP",
+      "Set aggressive HTTP header timeout (5-10 seconds max)",
+      "Use reverse proxy (nginx) to handle slow clients and buffer requests",
+      "Increase server max_clients/worker_connections if resources allow",
+      "Implement IP-based connection throttling and rate limiting"
+    ]
+  },
+  "DDoS": {
+    "technique_id": "T1498",
+    "technique_name": "Network Denial of Service",
+    "tactic": "Impact",
+    "url": "https://attack.mitre.org/techniques/T1498/",
+    "mitigations": [
+      "M1037: Filter Network Traffic - Deploy upstream DDoS scrubbing services",
+      "M1035: Limit Access to Resource Over Network - Use anycast DNS and CDN",
+      "Implement BGP flowspec for network-level traffic filtering",
+      "Deploy cloud-based DDoS scrubbing services",
+      "Establish incident response runbook specifically for DDoS attacks"
+    ]
+  },
+  "FTP-Patator": {
+    "technique_id": "T1110.001",
+    "technique_name": "Brute Force: Password Guessing",
+    "tactic": "Credential Access",
+    "url": "https://attack.mitre.org/techniques/T1110/001/",
+    "mitigations": [
+      "M1036: Account Use Policies - Implement account lockout after failed attempts",
+      "M1032: Multi-factor Authentication - Enable MFA for FTP access where possible",
+      "M1018: User Account Management - Enforce strong password policies",
+      "Disable anonymous FTP access and use SFTP/FTPS instead",
+      "Implement fail2ban or similar intrusion prevention for FTP",
+      "Consider IP allowlisting for FTP access"
+    ]
+  },
+  "SSH-Patator": {
+    "technique_id": "T1110.001",
+    "technique_name": "Brute Force: Password Guessing",
+    "tactic": "Credential Access",
+    "url": "https://attack.mitre.org/techniques/T1110/001/",
+    "mitigations": [
+      "M1036: Account Use Policies - Implement account lockout after failed attempts",
+      "M1032: Multi-factor Authentication - Use SSH key authentication + MFA",
+      "M1018: User Account Management - Disable password authentication entirely",
+      "Use fail2ban to block repeated authentication failures",
+      "Change SSH to non-standard port and implement port knocking",
+      "Require VPN access before SSH connection is allowed"
+    ]
+  },
+  "PortScan": {
+    "technique_id": "T1046",
+    "technique_name": "Network Service Scanning",
+    "tactic": "Discovery",
+    "url": "https://attack.mitre.org/techniques/T1046/",
+    "mitigations": [
+      "M1030: Network Segmentation - Limit exposed services and segment networks",
+      "M1031: Network Intrusion Prevention - Deploy IPS with port scan detection rules",
+      "M1037: Filter Network Traffic - Implement strict firewall rules",
+      "Disable unnecessary network services on all hosts",
+      "Use port scan detection tools (psad, portsentry, Snort)",
+      "Implement network traffic analysis for anomaly detection"
+    ]
+  },
+  "Web Attack - Brute Force": {
+    "technique_id": "T1110.001",
+    "technique_name": "Brute Force: Password Guessing",
+    "tactic": "Credential Access",
+    "url": "https://attack.mitre.org/techniques/T1110/001/",
+    "mitigations": [
+      "M1036: Account Use Policies - Implement progressive account lockout",
+      "M1032: Multi-factor Authentication - Require MFA for all user logins",
+      "Implement CAPTCHA after 3-5 failed login attempts",
+      "Use rate limiting on authentication endpoints (e.g., 5 req/min)",
+      "Deploy WAF with brute force protection rules enabled",
+      "Monitor failed login attempts and alert on anomalies"
+    ]
+  },
+  "Web Attack - XSS": {
+    "technique_id": "T1059.007",
+    "technique_name": "Command and Scripting Interpreter: JavaScript",
+    "tactic": "Execution",
+    "url": "https://attack.mitre.org/techniques/T1059/007/",
+    "mitigations": [
+      "M1021: Restrict Web-Based Content - Implement Content Security Policy (CSP) headers",
+      "Sanitize and encode all user input on both client and server side",
+      "Use HTTPOnly and Secure flags on all session cookies",
+      "Deploy WAF with XSS signature detection and blocking",
+      "Implement input validation with allowlisting approach",
+      "Use modern frameworks with built-in XSS protection (React, Angular)"
+    ]
+  },
+  "Web Attack - Sql Injection": {
+    "technique_id": "T1190",
+    "technique_name": "Exploit Public-Facing Application",
+    "tactic": "Initial Access",
+    "url": "https://attack.mitre.org/techniques/T1190/",
+    "mitigations": [
+      "M1050: Exploit Protection - Use parameterized queries/prepared statements exclusively",
+      "M1021: Restrict Web-Based Content - Deploy WAF with SQL injection rules",
+      "Use ORM frameworks to prevent raw SQL query construction",
+      "Implement least-privilege database accounts for applications",
+      "Regularly scan applications for SQL injection vulnerabilities",
+      "Enable database query logging and monitoring for anomalies"
+    ]
+  },
+  "Bot": {
+    "technique_id": "T1071.001",
+    "technique_name": "Application Layer Protocol: Web Protocols",
+    "tactic": "Command and Control",
+    "url": "https://attack.mitre.org/techniques/T1071/001/",
+    "mitigations": [
+      "M1031: Network Intrusion Prevention - Deploy IDS/IPS with C2 detection signatures",
+      "M1030: Network Segmentation - Isolate infected hosts immediately",
+      "Monitor for beaconing behavior (regular interval connections)",
+      "Implement DNS sinkholing for known C2 domains",
+      "Deploy endpoint detection and response (EDR) solutions",
+      "Block known malicious IP addresses and domains at firewall"
+    ]
+  },
+  "Infiltration": {
+    "technique_id": "T1071",
+    "technique_name": "Application Layer Protocol",
+    "tactic": "Command and Control",
+    "url": "https://attack.mitre.org/techniques/T1071/",
+    "mitigations": [
+      "M1031: Network Intrusion Prevention - Monitor for data exfiltration patterns",
+      "M1030: Network Segmentation - Implement micro-segmentation",
+      "Deploy Data Loss Prevention (DLP) solutions",
+      "Monitor for unusual outbound data transfers (volume, timing, destination)",
+      "Implement egress filtering and proxy logging",
+      "Use network behavior analysis for anomaly detection"
+    ]
+  },
+  "Heartbleed": {
+    "technique_id": "T1190",
+    "technique_name": "Exploit Public-Facing Application",
+    "tactic": "Initial Access",
+    "url": "https://attack.mitre.org/techniques/T1190/",
+    "mitigations": [
+      "M1051: Update Software - Patch OpenSSL immediately (CVE-2014-0160)",
+      "M1050: Exploit Protection - Use WAF rules to detect Heartbleed exploit attempts",
+      "Rotate all SSL/TLS certificates and private keys after patching",
+      "Force password resets for all users of affected systems",
+      "Conduct vulnerability scanning for CVE-2014-0160",
+      "Implement regular patching and vulnerability management program"
+    ]
+  },
+  "BENIGN": {
+    "technique_id": "N/A",
+    "technique_name": "Normal Traffic",
+    "tactic": "N/A",
+    "url": "",
+    "mitigations": []
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "Infiltration": [
+    "Fwd Packet Length Mean",
+    "Avg Fwd Segment Size",
+    "Destination Port",
+    "Subflow Fwd Bytes",
+    "Total Fwd Packets"
+  ],
+  "Heartbleed": [
+    "Total Fwd Packets",
+    "Bwd Header Length",
+    "Bwd Packet Length Mean",
+    "Subflow Fwd Packets",
+    "Packet Length Mean"
+  ],
+  "DoS Hulk": [
+    "Bwd Packet Length Mean",
+    "Bwd Packet Length Std",
+    "Packet Length Variance",
+    "Max Packet Length",
+    "Avg Bwd Segment Size"
+  ],
+  "Web Attack - Brute Force": [
+    "Init_Win_bytes_backward",
+    "Fwd IAT Min",
+    "Flow Bytes/s",
+    "Fwd Packet Length Mean",
+    "Max Packet Length"
+  ],
+  "DoS slowloris": [
+    "Bwd Packet Length Mean",
+    "Flow Bytes/s",
+    "Flow IAT Mean",
+    "Fwd IAT Min",
+    "Bwd Packets/s"
+  ],
+  "Web Attack - XSS": [
+    "Fwd IAT Min",
+    "Init_Win_bytes_backward",
+    "Flow Bytes/s",
+    "Init_Win_bytes_forward",
+    "Max Packet Length"
+  ],
+  "Web Attack - Sql Injection": [
+    "Init_Win_bytes_backward",
+    "Destination Port",
+    "Flow Bytes/s",
+    "Fwd Packet Length Mean",
+    "min_seg_size_forward"
+  ],
+  "SSH-Patator": [
+    "Destination Port",
+    "Bwd Header Length",
+    "Fwd Packet Length Max",
+    "Total Fwd Packets",
+    "Total Backward Packets"
+  ],
+  "Bot": [
+    "Destination Port",
+    "Bwd Packet Length Mean",
+    "Init_Win_bytes_forward",
+    "Bwd Packet Length Max",
+    "Init_Win_bytes_backward"
+  ],
+  "FTP-Patator": [
+    "Destination Port",
+    "Avg Fwd Segment Size",
+    "Average Packet Size",
+    "Fwd Packet Length Mean",
+    "Max Packet Length"
+  ],
+  "PortScan": [
+    "Subflow Fwd Bytes",
+    "Packet Length Mean",
+    "Avg Fwd Segment Size",
+    "Fwd Packet Length Max",
+    "Average Packet Size"
+  ],
+  "DoS GoldenEye": [
+    "Fwd Packets/s",
+    "Flow IAT Mean",
+    "Fwd IAT Total",
+    "Flow Packets/s",
+    "Fwd IAT Mean"
+  ],
+  "DDoS": [
+    "Avg Fwd Segment Size",
+    "Fwd Packet Length Mean",
+    "Fwd Packet Length Max",
+    "act_data_pkt_fwd",
+    "Subflow Fwd Bytes"
+  ],
+  "DoS Slowhttptest": [
+    "Flow IAT Mean",
+    "Fwd IAT Min",
+    "Fwd IAT Max",
+    "Fwd IAT Mean",
+    "Bwd Packets/s"
+  ]
+}

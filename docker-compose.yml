@@ -1,0 +1,11 @@
+services:
+  ids-api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+    environment:
+      - IDS_DEBUG=false
+      - IDS_ALLOWED_ORIGINS=*
+    restart: unless-stopped

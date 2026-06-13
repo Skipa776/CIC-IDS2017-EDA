@@ -1,0 +1,336 @@
+{
+  "generated": "2026-06-12T17:48:54",
+  "data_path": "/Users/joshuado/cicids-eda/data/processed/cicids2017_clean_v2.parquet",
+  "n_attack_flows_clustered": 42357,
+  "k": 14,
+  "silhouette_scores": {
+    "8": 0.4099,
+    "9": 0.4426,
+    "10": 0.4195,
+    "11": 0.4498,
+    "12": 0.4491,
+    "13": 0.4494,
+    "14": 0.5044,
+    "15": 0.4983,
+    "16": 0.4891
+  },
+  "distinct_techniques": [
+    "T1046",
+    "T1071",
+    "T1071.001",
+    "T1110.001",
+    "T1190",
+    "T1498.001"
+  ],
+  "clusters": [
+    {
+      "cluster": 0,
+      "size": 2641,
+      "dominant_label": "FTP-Patator",
+      "purity": 0.614,
+      "label_distribution": {
+        "FTP-Patator": 1622,
+        "DoS Slowhttptest": 681,
+        "DoS slowloris": 313,
+        "SSH-Patator": 14,
+        "Infiltration": 11
+      },
+      "signature_features_z_vs_benign": {
+        "Fwd PSH Flags": 4.26,
+        "SYN Flag Count": 4.26,
+        "ACK Flag Count": 2.2,
+        "Has_Init_Win_bwd": 2.01,
+        "min_seg_size_forward": 1.88
+      },
+      "mitre_technique_id": "T1110.001",
+      "mitre_technique_name": "Brute Force: Password Guessing",
+      "mitre_tactic": "Credential Access"
+    },
+    {
+      "cluster": 1,
+      "size": 3439,
+      "dominant_label": "DoS Hulk",
+      "purity": 0.776,
+      "label_distribution": {
+        "DoS Hulk": 2667,
+        "DDoS": 771,
+        "DoS slowloris": 1
+      },
+      "signature_features_z_vs_benign": {
+        "Bwd Packet Length Std": 7.67,
+        "Fwd IAT Std": 7.19,
+        "Bwd Packet Length Max": 6.81,
+        "Avg Bwd Segment Size": 6.3,
+        "Bwd Packet Length Mean": 6.3
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 2,
+      "size": 21792,
+      "dominant_label": "PortScan",
+      "purity": 0.228,
+      "label_distribution": {
+        "PortScan": 4977,
+        "FTP-Patator": 3376,
+        "SSH-Patator": 3204,
+        "Bot": 1901,
+        "DoS slowloris": 1854,
+        "DDoS": 1827,
+        "DoS GoldenEye": 1538,
+        "Web Attack - Brute Force": 1467,
+        "Web Attack - XSS": 648,
+        "DoS Hulk": 492,
+        "DoS Slowhttptest": 482,
+        "Web Attack - Sql Injection": 20,
+        "Infiltration": 6
+      },
+      "signature_features_z_vs_benign": {
+        "PSH Flag Count": 2.26,
+        "Has_Init_Win_bwd": 2.01,
+        "Init_Win_bytes_forward": 1.91,
+        "min_seg_size_forward": 1.88,
+        "Average Packet Size": -0.35
+      },
+      "mitre_technique_id": "T1046",
+      "mitre_technique_name": "Network Service Scanning",
+      "mitre_tactic": "Discovery"
+    },
+    {
+      "cluster": 3,
+      "size": 10,
+      "dominant_label": "Heartbleed",
+      "purity": 1.0,
+      "label_distribution": {
+        "Heartbleed": 10
+      },
+      "signature_features_z_vs_benign": {
+        "Bwd Packet Length Max": 18.06,
+        "Max Packet Length": 14.0,
+        "Bwd Packet Length Mean": 12.59,
+        "Avg Bwd Segment Size": 12.59,
+        "Packet Length Variance": 10.51
+      },
+      "mitre_technique_id": "T1190",
+      "mitre_technique_name": "Exploit Public-Facing Application",
+      "mitre_tactic": "Initial Access"
+    },
+    {
+      "cluster": 4,
+      "size": 975,
+      "dominant_label": "DoS slowloris",
+      "purity": 0.999,
+      "label_distribution": {
+        "DoS slowloris": 974,
+        "PortScan": 1
+      },
+      "signature_features_z_vs_benign": {
+        "Bwd IAT Min": 10.74,
+        "Fwd IAT Min": 10.69,
+        "Bwd IAT Mean": 10.38,
+        "Fwd IAT Mean": 10.33,
+        "Flow IAT Std": 9.46
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 5,
+      "size": 5276,
+      "dominant_label": "DoS GoldenEye",
+      "purity": 0.469,
+      "label_distribution": {
+        "DoS GoldenEye": 2473,
+        "DDoS": 2402,
+        "DoS Hulk": 388,
+        "Web Attack - XSS": 4,
+        "PortScan": 3,
+        "Web Attack - Brute Force": 3,
+        "DoS slowloris": 1,
+        "Heartbleed": 1,
+        "Web Attack - Sql Injection": 1
+      },
+      "signature_features_z_vs_benign": {
+        "Bwd Packet Length Std": 10.98,
+        "Packet Length Variance": 8.15,
+        "Avg Bwd Segment Size": 7.62,
+        "Bwd Packet Length Mean": 7.62,
+        "Bwd Packet Length Max": 6.87
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 6,
+      "size": 2767,
+      "dominant_label": "DoS Slowhttptest",
+      "purity": 0.965,
+      "label_distribution": {
+        "DoS Slowhttptest": 2670,
+        "DoS slowloris": 52,
+        "DoS GoldenEye": 42,
+        "Infiltration": 3
+      },
+      "signature_features_z_vs_benign": {
+        "Active Min": 13.77,
+        "Active Mean": 11.09,
+        "Active Max": 5.78,
+        "Idle Std": 4.1,
+        "min_seg_size_forward": 3.14
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 7,
+      "size": 6,
+      "dominant_label": "Infiltration",
+      "purity": 1.0,
+      "label_distribution": {
+        "Infiltration": 6
+      },
+      "signature_features_z_vs_benign": {
+        "Total Length of Fwd Packets": 173.86,
+        "Subflow Fwd Bytes": 173.86,
+        "Bwd IAT Total": 4.0,
+        "Fwd IAT Total": 3.89,
+        "Flow Duration": 3.87
+      },
+      "mitre_technique_id": "T1071",
+      "mitre_technique_name": "Application Layer Protocol",
+      "mitre_tactic": "Command and Control"
+    },
+    {
+      "cluster": 8,
+      "size": 1852,
+      "dominant_label": "DoS slowloris",
+      "purity": 0.871,
+      "label_distribution": {
+        "DoS slowloris": 1613,
+        "DoS Slowhttptest": 216,
+        "DoS GoldenEye": 16,
+        "Infiltration": 6,
+        "DoS Hulk": 1
+      },
+      "signature_features_z_vs_benign": {
+        "Active Std": 8.96,
+        "Bwd IAT Std": 6.39,
+        "Idle Std": 6.31,
+        "Active Mean": 5.86,
+        "Active Max": 5.79
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 9,
+      "size": 44,
+      "dominant_label": "Bot",
+      "purity": 1.0,
+      "label_distribution": {
+        "Bot": 44
+      },
+      "signature_features_z_vs_benign": {
+        "Avg Fwd Segment Size": 18.78,
+        "Fwd Packet Length Mean": 18.78,
+        "Fwd Packet Length Max": 18.72,
+        "Max Packet Length": 13.44,
+        "Packet Length Variance": 12.83
+      },
+      "mitre_technique_id": "T1071.001",
+      "mitre_technique_name": "Application Layer Protocol: Web Protocols",
+      "mitre_tactic": "Command and Control"
+    },
+    {
+      "cluster": 10,
+      "size": 1098,
+      "dominant_label": "DoS Slowhttptest",
+      "purity": 0.863,
+      "label_distribution": {
+        "DoS Slowhttptest": 948,
+        "DoS slowloris": 147,
+        "Infiltration": 3
+      },
+      "signature_features_z_vs_benign": {
+        "Bwd IAT Std": 17.62,
+        "Fwd IAT Std": 12.76,
+        "Idle Min": 7.98,
+        "Idle Mean": 7.81,
+        "Bwd IAT Max": 7.64
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 11,
+      "size": 977,
+      "dominant_label": "DoS GoldenEye",
+      "purity": 0.953,
+      "label_distribution": {
+        "DoS GoldenEye": 931,
+        "DoS slowloris": 45,
+        "Infiltration": 1
+      },
+      "signature_features_z_vs_benign": {
+        "Flow IAT Min": 16.95,
+        "Flow IAT Mean": 12.72,
+        "Fwd IAT Min": 8.36,
+        "Fwd IAT Mean": 8.08,
+        "Idle Min": 5.42
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 12,
+      "size": 1451,
+      "dominant_label": "DoS Hulk",
+      "purity": 1.0,
+      "label_distribution": {
+        "DoS Hulk": 1451
+      },
+      "signature_features_z_vs_benign": {
+        "FIN Flag Count": 9.98,
+        "Fwd IAT Std": 9.05,
+        "Bwd IAT Std": 8.65,
+        "Bwd Packet Length Std": 7.46,
+        "Idle Min": 7.19
+      },
+      "mitre_technique_id": "T1498.001",
+      "mitre_technique_name": "Network Denial of Service: Direct Network Flood",
+      "mitre_tactic": "Impact"
+    },
+    {
+      "cluster": 13,
+      "size": 29,
+      "dominant_label": "PortScan",
+      "purity": 0.655,
+      "label_distribution": {
+        "PortScan": 19,
+        "Bot": 3,
+        "DoS Slowhttptest": 3,
+        "FTP-Patator": 2,
+        "DoS Hulk": 1,
+        "SSH-Patator": 1
+      },
+      "signature_features_z_vs_benign": {
+        "Bwd Packets/s": 26.5,
+        "Flow Packets/s": 9.13,
+        "Fwd Packets/s": 4.73,
+        "PSH Flag Count": 2.26,
+        "Has_Init_Win_bwd": 2.01
+      },
+      "mitre_technique_id": "T1046",
+      "mitre_technique_name": "Network Service Scanning",
+      "mitre_tactic": "Discovery"
+    }
+  ]
+}
