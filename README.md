@@ -60,7 +60,27 @@ type (14 classes, macro F1 0.910 on the random split). Details: `models/MODEL_CA
 
 ## What I learned
 
-TODO(josh): write this section myself, 4-6 sentences.
+This was my first full EDA. I learned how one is structured: load and clean the data, check its
+quality, look at distributions and imbalance, build baselines, then evaluate honestly. Along the
+way I learned Python, pandas, and how to train and evaluate machine learning models.
+
+I expected Isolation Forest to be the better fit, since intrusion detection sounds like anomaly
+detection. Logistic regression did much better on the same test set: PR-AUC 0.955 against 0.540
+for Isolation Forest (no-skill 0.169). Isolation Forest never sees attack labels. It only flags
+flows that look statistically unusual compared to benign traffic. But "unusual" and "malicious"
+are not the same thing. Much benign traffic is unusual, and the largest attack classes (DoS Hulk,
+DDoS, PortScan) are high-volume and repetitive, so they form dense clusters of their own instead
+of isolated outliers. Logistic regression uses the labels to learn what attacks look like, and on
+this data that signal was much stronger.
+
+The cross-day results showed where that advantage stops. A supervised model does well on attack
+types it trained on and poorly on new ones, which is the case anomaly detection is meant for. I
+have not yet tested Isolation Forest on the held-out days. That is the next comparison I want to run.
+
+The most useful habit I picked up was questioning my own results. A near-perfect score was the
+start of the investigation, not the end. Checking the evaluation (splitting before resampling,
+comparing to a no-skill baseline, holding out whole days, reading per-attack recall) is what
+turned up the real finding.
 
 ## Repo layout
 
