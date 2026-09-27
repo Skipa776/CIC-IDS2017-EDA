@@ -1,228 +1,116 @@
-# CICIDS2017 EDA & Baseline Detection
+# Intrusion detection on CIC-IDS2017
 
-This repository contains an exploratory data analysis (EDA) and baseline detection models for the **CICIDS2017** intrusion detection dataset.
+Why near-perfect random-split scores on CIC-IDS2017 don't mean a model can detect new attacks.
 
-The goals of this project are to:
+## Key finding
 
-- Understand the structure and quality of the CICIDS2017 flow data.
-- Document feature families relevant to intrusion detection (packet volume, timing, TCP flags, etc.).
-- Quantify class imbalance and traffic patterns across attack types and capture days.
-- Train and evaluate simple, interpretable baseline models:
-  - **Logistic Regression** (supervised, benign vs attack).
-  - **Isolation Forest** (unsupervised anomaly detection).
-- Produce plots and metrics suitable for review and future modeling work.
+Layer 1 (benign vs. attack, LightGBM) evaluated three ways. Precision and recall are at the
+default 0.5 threshold. Source: `models/model_metadata.json`.
 
-> ⚠️ **Note:** The raw CICIDS2017 data is **not stored** in this repository due to size and licensing. You must download it separately and place it under `data/raw/` (see instructions below).
+| Test | PR-AUC | No-skill PR-AUC | Precision | Recall |
+|---|---:|---:|---:|---:|
+| Random 80/20 split | 1.000 | 0.169 | 0.982 | 0.999 |
+| Friday held out | 0.824 | 0.358 | 0.678 | 0.011 |
+| Wed+Thu held out | 0.466 | 0.197 | 0.176 | 0.041 |
 
----
+The random-split PR-AUC is 0.9997 before rounding.
 
-## Repository Structure
+In CIC-IDS2017 each attack type appears on only one capture day. Holding out days is the same as
+holding out attack types. The random split tells us the model recognizes attacks it has already
+seen. The held-out days test whether it can flag attacks it has never seen, which is the question
+that matters for an IDS. At the default threshold it catches 1.1% and 4.1% of those attack flows.
+On Wed+Thu, precision at the default threshold (0.176) is below the attack share of the test set
+(0.197).
 
-```text
-.
-├── data/
-│   ├── raw/          # raw CICIDS2017 CSVs (NOT tracked in git)
-│   └── processed/    # cleaned/derived datasets (NOT tracked in git)
-│
-├── notebooks/
-│   ├── cicids2017_eda.ipynb       # main high-level EDA + baselines
-│   ├── attack_types.ipynb         # (future) EDA & metrics per attack type
-│   └── day_of_the_weeks.ipynb     # (future) EDA & metrics per capture day/source
-│
-├── reports/
-│   └── figures/     # saved plots (PR curves, confusion matrices, etc.)
-│
-├── src/
-│   ├── data/        # (future) data loading/processing utilities
-│   ├── features/    # (future) feature engineering utilities
-│   └── models/      # (future) model definitions & training scripts
-│
-├── .gitignore
-└── README.md
+Lowering the threshold does not fix this. Recall at fixed false positive rates on held-out benign
+traffic (`scripts/crossday_threshold_analysis.py`, output in
+`reports/crossday_threshold_analysis.json`):
+
+| Test | Recall at 0.1% FPR | at 1% FPR | at 5% FPR |
+|---|---:|---:|---:|
+| Random 80/20 split | 0.995 | 1.000 | 1.000 |
+| Friday held out | 0.002 | 0.138 | 0.595 |
+| Wed+Thu held out | 0.000 | 0.000 | 0.150 |
+
+At 1% FPR on the Friday holdout, per-attack recall is DDoS 0.233, PortScan 0.005, and Bot 0.000.
+On the Wed+Thu holdout every attack type (DoS variants, web attacks, Infiltration, Heartbleed) is
+0.000. PR curves for all three splits: `reports/crossday_pr_curves.png`.
+
+## What I checked, and what I found
+
+- v1 cleaning dropped 51% of rows (2,830,743 raw, 1,388,089 kept) because `Init_Win_bytes = -1` was treated as corrupt. It is a sentinel for "no TCP window observed." v2 keeps these 1,439,672 flows with indicator columns and retains 2,519,262 rows (89.0%).
+- Removed 307,070 exact duplicates and 1,394 rows whose identical feature vectors had contradictory labels (`reports/dataset_v2_manifest.json`).
+- The split happens before benign downsampling, the test set keeps natural prevalence (16.9% attack), and the scaler is fit on training data only.
+- Shuffled-label sanity check: test PR-AUC 0.618 against a no-skill baseline of 0.680, so the pipeline does not leak labels (`reports/eda_baseline_validation_v2.json`, experiment 6).
+- Destination Port alone reaches PR-AUC 0.753 against a no-skill of 0.680 and 0.995 for all 71 features. Dropping it leaves 0.994. In v2 the port is not the shortcut it looked like in v1, where it alone reached 0.817 (experiment 4; these experiments use logistic regression on a test set that is 68% attack).
+- CIC-IDS2017 has known flow-construction and labeling defects, documented by Engelen, Rimmer & Joosen (2021), "Troubleshooting an Intrusion Detection Dataset: the CICIDS2017 Case Study." I did not correct for these, so they bound every number here.
+
+## Models
+
+Two LightGBM classifiers on 20 flow features (`src/features/engineering.py`, `FAST_FEATURES`).
+Layer 1 decides benign vs. attack. Layer 2 runs only on flows Layer 1 flags and names the attack
+type (14 classes, macro F1 0.910 on the random split). Details: `models/MODEL_CARD.txt`.
+
+## Limitations
+
+- The data is lab-generated traffic from 2017. Scores will not carry over to a real network.
+- Labels are noisy (see Engelen et al. above).
+- Some classes are tiny: Heartbleed has 11 flows, SQL injection 21, Infiltration 36. Their metrics are anecdotal.
+- Flow features describe packet sizes, counts, and timing. They cannot see payloads, so attacks that differ only in content (XSS vs. SQL injection) are hard to separate.
+
+## What I learned
+
+TODO(josh): write this section myself, 4-6 sentences.
+
+## Repo layout
 
 ```
-
-## Instructions
-## Dataset: CICIDS2017
-
-The project uses the **CICIDS2017** dataset from the Canadian Institute for Cybersecurity.
-
-You must download the data yourself and place the CSV files under `data/raw/`.
-
-### 1. Download the dataset
-
-1. Visit the official CICIDS2017 page (Canadian Institute for Cybersecurity).
-2. Request/download the dataset (you’ll get a compressed archive containing multiple `.pcap_ISCX.csv` files).
-3. Extract the CSV files locally.
-
-Typical filenames include:
-
-- `Monday-WorkingHours.pcap_ISCX.csv`
-- `Tuesday-WorkingHours.pcap_ISCX.csv`
-- `Wednesday-workingHours.pcap_ISCX.csv`
-- `Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv`
-- `Friday-WorkingHours-Morning.pcap_ISCX.csv`
-- `Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv`
-- `Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv`
-- etc.
-
-### 2. Place the files in `data/raw/`
-
-Inside this repo, create:
-
-```text
-data/raw/MachineLearningCVE/
-
-and place all CICIDS2017 CSVs there, for example:
-data/raw/MachineLearningCVE/Monday-WorkingHours.pcap_ISCX.csv
-data/raw/MachineLearningCVE/Tuesday-WorkingHours.pcap_ISCX.csv
-...
+api/                  FastAPI service: classify flows, return MITRE ATT&CK mapping
+data/processed/       cleaned parquet files (not tracked; built by scripts/build_dataset.py)
+models/               MODEL_CARD.txt, model_metadata.json, mitre_mapping.json tracked;
+                      trained .joblib files are not tracked (built by scripts/train_models.py)
+notebooks/
+  cicids2017_eda.ipynb      EDA, logistic regression and Isolation Forest baselines
+  attack_types.ipynb        per-attack analysis, random forest multiclass
+  archive/day_of_the_weeks.ipynb   unfinished stub, archived (never fully run)
+reports/              validation JSONs, dataset manifest, threshold analysis, SOC playbook,
+                      notebook review, figures
+scripts/
+  build_dataset.py          raw CSVs -> data/processed/cicids2017_clean_v2.parquet + manifest
+  train_models.py           trains layers 1 and 2, writes models/ and metadata
+  crossday_threshold_analysis.py   recall at fixed FPR on held-out days
+  validate_eda_baseline.py  7-experiment evaluation-protocol checks
+  attack_clustering.py      KMeans clusters of attack flows -> MITRE techniques
+  test_overfitting*.py, smoke_test.py   diagnostics
+src/                  cleaning, loading, feature, training and evaluation code
+tests/                pytest suite for the API, classifier, and MITRE mapping
 ```
 
-The main EDA notebook expects this structure:
+## How to reproduce
 
-- Root of repo: .../CIC-IDS2017-EDA/
-- Raw data CSVs: data/raw/MachineLearningCVE/*.pcap_ISCX.csv
-
-Environment & Dependencies
-
-This project assumes:
-- Python 3.9+
-- Common data science stack: pandas, numpy
-- matplotlib, seaborn
-- scikit-learn
-- pyarrow (for Parquet)
-- umap-learn (for UMAP visualizations, optional)
-- jupyter / notebook / jupyterlab
-
-A minimal example using pip:
+Download the CIC-IDS2017 MachineLearningCVE CSVs from the Canadian Institute for Cybersecurity and
+put the 8 files in `cic-ids-eda/data/raw/MachineLearningCVE/`. Then:
 
 ```sh
-pip install \
-  pandas numpy matplotlib seaborn scikit-learn \
-  umap-learn pyarrow jupyter
+pip install -r requirements.txt
+python scripts/build_dataset.py                 # -> data/processed/cicids2017_clean_v2.parquet
+python scripts/train_models.py                  # -> models/ artifacts and model_metadata.json
+python scripts/crossday_threshold_analysis.py   # -> reports/crossday_threshold_analysis.json + PR curves
+python scripts/validate_eda_baseline.py --data data/processed/cicids2017_clean_v2.parquet --tag _v2
+pytest tests/
 ```
 
-If you use conda, you can create an environment and install these via conda/mamba.
+All seeds are fixed (`random_state=42`).
 
-Running the Main EDA Notebook
+## Other components
 
-The primary analysis lives in:
-notebooks/cicids2017_eda.ipynb
+`api/` is a FastAPI service (`uvicorn api.main:app`) that runs both layers on a flow and returns
+the attack type with its MITRE ATT&CK technique and mitigations. The mapping is in
+`api/services/mitre_mapping.py`, exported to `models/mitre_mapping.json`. `tests/` covers the API
+contract, the classifier, and the mapping. `reports/soc_triage_playbook.md` describes how an
+analyst should read the alerts, including where not to trust them.
 
-Steps
+## Data license
 
-- Ensure raw data is placed under data/raw/MachineLearningCVE/ as described above.
-- Start Jupyter:
-
-```sh
-cd /path/to/CIC-IDS2017-EDA
-jupyter lab # or jupyter notebook
-```
-
-- Open notebooks/cicids2017_eda.ipynb.
-- Run all cells top-to-bottom.
-
-What this notebook does
-
-At a high level, the notebook:
-
-- Setup
-  - Imports libraries and sets basic plotting styles.
-- Load Data
-  - Loads all CICIDS2017 CSV files from data/raw/MachineLearningCVE/.
-  - Adds a Meta_source column indicating the source file/capture.
-  - Concatenates everything into a single combined_df.
-- Cleaning & Feature Engineering
-  - Handles NaNs and infinities (e.g., Flow Bytes/s).
-  - Drops constant or redundant columns.
-  - Strips whitespace from column names.
-  - Enforces basic numeric sanity checks (e.g., no negative counts for non-IAT numeric features).
-  - Defines numeric_cols as the numeric feature set for EDA and modeling.
-- Exploratory Data Analysis
-  - Label distribution and class imbalance.
-  - Feature families overview (flow metadata, TCP flags, packet stats, timing, etc.).
-  - Packet volume distributions (Total Fwd/Backward Packets) by label.
-  - Correlation heatmap of numeric features.
-  - Low-dimensional projections (e.g., PCA + UMAP/t-SNE) on a balanced subsample.
-- Baseline Models
-  - Logistic Regression (supervised):
-    - Binary target: benign vs attack.
-    - Stratified train/test split.
-    - Standardization of numeric features.
-    - 5-fold cross-validated PR-AUC on the training set.
-  - Isolation Forest (unsupervised):
-    - Trained on benign-only traffic.
-    - Applied as an anomaly detector on the test set.
-- Evaluation & Metrics
-  - Classification reports for both models.
-  - Confusion matrices (benign vs attack).
-  - Precision–Recall curves and PR-AUC for both models.
-  - Comparison table summarizing:
-    - Precision, recall, F1, PR-AUC for the attack class.
-- Executive Summary
-  - High-level bullets summarizing:
-    - Data coverage and cleaning.
-    - Class imbalance.
-    - Key feature/structure insights.
-    - Baseline model performance.
-    - Next steps (per-attack analysis, time-aware splits, advanced models).
-
-The final cell prints:
-
-```python
-print("Audit-ready: metrics saved to reports/figures/")
-```
-
-once evaluation plots have been saved.
-
-Processed Data Artifacts
-
-After cleaning, the notebook can save a consolidated, cleaned dataset under data/processed/, for example:
-
-```python
-from pathlib import Path
-processed_dir = Path("data/processed")
-processed_dir.mkdir(parents=True, exist_ok=True)
-combined_df.to_parquet(processed_dir / "cicids2017_clean.parquet", index=False)
-combined_df.to_csv(processed_dir / "cicids2017_clean.csv", index=False)
-```
-
-These processed files are not tracked in git (see .gitignore) but can be reused by:
-- notebooks/attack_types.ipynb
-- notebooks/day_of_the_weeks.ipynb
-- Future modeling notebooks under notebooks/ or src/models/.
-
-Planned / Optional Notebooks
-
-The project roadmap includes:
-
-- notebooks/attack_types.ipynb
-  - Per-attack-type EDA and model performance:
-  - Per-class counts and imbalance.
-  - Per-attack precision/recall/F1 for the baseline models.
-  - Identification of which attacks are hardest/easiest to detect.
-- notebooks/day_of_the_weeks.ipynb
-  - Day-based or scenario-based EDA:
-  - Behavior by Meta_source (capture days / scenarios).
-  - Time-aware or day-wise train/test splits to simulate generalization to unseen days.
-- Modeling notebooks (future)
-  - Additional notebooks may explore:
-  - Tree-based models (Random Forest, XGBoost).
-  - Autoencoder-based anomaly detection.
-  - Threat context mapping to MITRE ATT&CK tactics/techniques.
-
-Git & Data Hygiene
-
-To keep the repository lightweight and shareable:
-
-- Raw data and large artifacts are not committed to git.
-- data/raw/, data/processed/, models/, and reports/figures/ are ignored via .gitignore.
-- Check out the repo, download the data separately, and place it under data/raw/.
-- If you add your own large files, make sure they go into an ignored directory or update .gitignore accordingly.
-
-License / Usage Notes
-
-The CICIDS2017 dataset is distributed by the Canadian Institute for Cybersecurity under its own terms. Make sure you comply with their license and usage conditions.
-
-This code is intended for research, education, and experimentation with intrusion detection; it is not a production-ready security product.
+CIC-IDS2017 is distributed by the Canadian Institute for Cybersecurity under its own terms. It is
+not included in this repository.

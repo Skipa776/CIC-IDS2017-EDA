@@ -42,6 +42,40 @@ from src.models.evaluate import (
 
 
 DATA_PATH_V2 = Path(__file__).parent.parent / "data" / "processed" / "cicids2017_clean_v2.parquet"
+MAX_BENIGN = 200_000
+
+
+def downsample_benign(idx, y_binary, max_benign=MAX_BENIGN, seed=42):
+    """Cap benign rows in a TRAINING index set; attack rows are all kept."""
+    benign, attack = idx[y_binary[idx] == 0], idx[y_binary[idx] == 1]
+    if len(benign) > max_benign:
+        benign = np.random.RandomState(seed).choice(benign, size=max_benign, replace=False)
+    return np.concatenate([benign, attack])
+
+
+def random_split(y_binary):
+    """Stratified 80/20 split; benign downsampled in the training portion only."""
+    idx_train, idx_test = train_test_split(
+        np.arange(len(y_binary)), test_size=0.2,
+        stratify=y_binary, random_state=42,
+    )
+    return downsample_benign(idx_train, y_binary), idx_test
+
+
+def crossday_splits(df, y_binary):
+    """Yield (name, test_days, train_idx, test_idx) for the two cross-day holdouts.
+
+    Each attack type occurs on a single day, so this also measures
+    generalization to unseen attack behavior.
+    """
+    days = df['Meta_source'].unique()
+    for name, test_days in [
+        ('test_friday', [d for d in days if d.startswith('Friday')]),
+        ('test_wed_thu', [d for d in days if d.startswith(('Wednesday', 'Thursday'))]),
+    ]:
+        test_mask = df['Meta_source'].isin(test_days).values
+        tr, te = np.where(~test_mask)[0], np.where(test_mask)[0]
+        yield name, test_days, downsample_benign(tr, y_binary), te
 
 
 def main():
@@ -77,20 +111,8 @@ def main():
     # Train/test split FIRST (stratified): the test set keeps the natural
     # benign/attack prevalence, so PR metrics reflect a realistic deployment
     print("\n3. Splitting data (natural-prevalence test set)...")
-    idx_train, idx_test = train_test_split(
-        np.arange(len(df)), test_size=0.2,
-        stratify=y_binary, random_state=42,
-    )
-
-    # Downsample benign in the TRAINING portion only (efficiency + imbalance)
-    print("\n4. Downsampling benign in the training portion...")
-    max_benign = 200_000
-    rng = np.random.RandomState(42)
-    train_benign = idx_train[y_binary[idx_train] == 0]
-    train_attack = idx_train[y_binary[idx_train] == 1]
-    if len(train_benign) > max_benign:
-        train_benign = rng.choice(train_benign, size=max_benign, replace=False)
-    idx_train = np.concatenate([train_benign, train_attack])
+    # Benign is downsampled in the TRAINING portion only (efficiency + imbalance)
+    idx_train, idx_test = random_split(y_binary)
 
     X_train, X_test = X_full[idx_train], X_full[idx_test]
     y_bin_train, y_bin_test = y_binary[idx_train], y_binary[idx_test]
@@ -135,20 +157,8 @@ def main():
     # Each attack type occurs on a single day, so this also measures
     # generalization to unseen attack behavior.
     print("\n7c. Cross-day holdout evaluation (Layer 1)...")
-    days = df['Meta_source'].unique()
     crossday = {}
-    for name, test_days in [
-        ('test_friday', [d for d in days if d.startswith('Friday')]),
-        ('test_wed_thu', [d for d in days if d.startswith(('Wednesday', 'Thursday'))]),
-    ]:
-        test_mask = df['Meta_source'].isin(test_days).values
-        tr, te = np.where(~test_mask)[0], np.where(test_mask)[0]
-        tr_benign, tr_attack = tr[y_binary[tr] == 0], tr[y_binary[tr] == 1]
-        cd_rng = np.random.RandomState(42)
-        if len(tr_benign) > max_benign:
-            tr_benign = cd_rng.choice(tr_benign, size=max_benign, replace=False)
-        tr = np.concatenate([tr_benign, tr_attack])
-
+    for name, test_days, tr, te in crossday_splits(df, y_binary):
         cd_scaler = create_scaler(X_full[tr])
         cd_model = train_layer1_binary(cd_scaler.transform(X_full[tr]), y_binary[tr])
         cd_metrics = evaluate_binary_model(cd_model, cd_scaler.transform(X_full[te]), y_binary[te])

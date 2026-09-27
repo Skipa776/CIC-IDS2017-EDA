@@ -1,5 +1,14 @@
 # Review: `notebooks/cicids2017_eda.ipynb`
 
+> **Note:** this review covers the v1 notebook and v1 dataset. These issues were fixed in v2
+> (`src/data/cleaning.py`, `scripts/build_dataset.py`, and the reworked notebook):
+> R1 (sentinel rows kept), R2 (duplicates and contradictory labels removed), R3 (inf/NaN handled
+> over both rate columns), the mojibake labels from R4, W1 (cross-day results reported), W2 (test
+> set at natural prevalence), W3 (per-attack recall reported), W4/W5 (scaler and model in a
+> `Pipeline` inside `cross_val_score`), and the unclustered correlation heatmap. Still open: W6
+> (`Destination Port` is still a raw numeric feature in the production model). Section 6 has the
+> v2 numbers.
+
 **Scope:** data representation, analysis workflow, and whether the reported Logistic Regression
 PR-AUC of 0.996 is plausible or an artifact of overfitting/leakage.
 
