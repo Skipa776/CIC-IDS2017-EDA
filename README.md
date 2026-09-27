@@ -60,27 +60,40 @@ type (14 classes, macro F1 0.910 on the random split). Details: `models/MODEL_CA
 
 ## What I learned
 
-This was my first full EDA. I learned how one is structured: load and clean the data, check its
-quality, look at distributions and imbalance, build baselines, then evaluate honestly. Along the
-way I learned Python, pandas, and how to train and evaluate machine learning models.
+This was my first full EDA and my first real project in Python, pandas, and machine learning. The
+biggest lessons were about the data and the evaluation, not the models.
 
-I expected Isolation Forest to be the better fit, since intrusion detection sounds like anomaly
-detection. Logistic regression did much better on the same test set: PR-AUC 0.955 against 0.540
-for Isolation Forest (no-skill 0.169). Isolation Forest never sees attack labels. It only flags
-flows that look statistically unusual compared to benign traffic. But "unusual" and "malicious"
-are not the same thing. Much benign traffic is unusual, and the largest attack classes (DoS Hulk,
-DDoS, PortScan) are high-volume and repetitive, so they form dense clusters of their own instead
-of isolated outliers. Logistic regression uses the labels to learn what attacks look like, and on
-this data that signal was much stronger.
+**How to split the data, above everything else.** A random train/test split put flows from the
+same attack session on both sides, so the model was graded on attacks it had already seen. Holding
+out whole capture days, splitting before downsampling benign traffic, and fitting the scaler on
+training data only changed a PR-AUC of 0.9997 into 0.466 on attack types the model had never seen.
+The split decides which question the score answers.
 
-The cross-day results showed where that advantage stops. A supervised model does well on attack
-types it trained on and poorly on new ones, which is the case anomaly detection is meant for. I
-have not yet tested Isolation Forest on the held-out days. That is the next comparison I want to run.
+**Data cleaning decides what the model can learn.** My first cleaning pass treated
+`Init_Win_bytes = -1` as corrupt and dropped 51% of the dataset. The value actually means "no TCP
+window observed." Keeping those rows raised the logistic regression baseline's SSH-Patator recall
+from 0.010 to 0.906, because the rows I had deleted carried the brute-force signal.
 
-The most useful habit I picked up was questioning my own results. A near-perfect score was the
-start of the investigation, not the end. Checking the evaluation (splitting before resampling,
-comparing to a no-skill baseline, holding out whole days, reading per-attack recall) is what
-turned up the real finding.
+**Picking features takes two steps.** A quick screen finds candidates, and retraining without a
+feature shows whether it matters. On Tuesday's traffic, `Destination Port` separated attacks best
+of any feature, because every FTP and SSH brute-force flow went to port 21 or 22. Dropping it
+barely changed the model (PR-AUC 0.984 to 0.973). A feature can rank first and still not matter.
+
+**Different attacks look different in flow data.** Brute-force logins look like ordinary sessions.
+DoS attacks produce unusually long flows. Web attacks were missed by the logistic regression
+baseline even after training on them (recall 0-3%), and even the LightGBM model has trouble
+telling XSS from SQL injection, because the difference is in the payload, which flow features
+don't see.
+
+That explains my Isolation Forest result. I expected it to beat logistic regression, since
+intrusion detection sounds like anomaly detection. On a random split it lost badly (PR-AUC 0.540
+vs. 0.955), because the supervised model had seen every attack type. When I trained both on
+Tuesday only and tested on Wednesday (`notebooks/single_day_eda.ipynb`), the result flipped:
+logistic regression fell below chance (0.214 against a no-skill of 0.328), and Isolation Forest
+reached 0.838. But Isolation Forest missed Tuesday's brute-force attacks completely, and limited to
+a 1% false-alarm rate it caught only 13% of Wednesday's attacks. A supervised model knows the
+attacks it has been shown. An anomaly detector catches only attacks that look unusual. Neither is
+enough on its own.
 
 ## Repo layout
 
@@ -92,6 +105,7 @@ models/               MODEL_CARD.txt, model_metadata.json, mitre_mapping.json tr
 notebooks/
   cicids2017_eda.ipynb      EDA, logistic regression and Isolation Forest baselines
   attack_types.ipynb        per-attack analysis, random forest multiclass
+  single_day_eda.ipynb      train on one day, test on another: logistic regression vs Isolation Forest
   archive/day_of_the_weeks.ipynb   unfinished stub, archived (never fully run)
 reports/              validation JSONs, dataset manifest, threshold analysis, SOC playbook,
                       notebook review, figures
