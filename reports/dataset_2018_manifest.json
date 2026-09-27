@@ -1,0 +1,29 @@
+{
+  "benign_sample_rate": 0.1,
+  "rows_raw": 4096716,
+  "flow_bytes_nan_filled": 6684,
+  "rows_dropped_inf_rates": 10681,
+  "sentinel_flows_kept": 2150019,
+  "rows_dropped_negative": 3,
+  "rows_dropped_duplicates": 1557465,
+  "rows_dropped_contradictory_labels": 14351,
+  "rows_clean": 2514216,
+  "columns": 73,
+  "label_counts": {
+    "BENIGN": 1170047,
+    "DDoS attacks-LOIC-HTTP": 575364,
+    "DDOS attack-HOIC": 198861,
+    "DoS attacks-Hulk": 145199,
+    "Bot": 144535,
+    "Infilteration": 132188,
+    "SSH-Bruteforce": 94041,
+    "DoS attacks-GoldenEye": 41406,
+    "DoS attacks-Slowloris": 9908,
+    "DDOS attack-LOIC-UDP": 1730,
+    "Brute Force -Web": 550,
+    "Brute Force -XSS": 227,
+    "SQL Injection": 78,
+    "DoS attacks-SlowHTTPTest": 43,
+    "FTP-BruteForce": 39
+  }
+}
