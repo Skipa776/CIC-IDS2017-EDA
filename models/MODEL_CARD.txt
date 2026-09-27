@@ -73,6 +73,9 @@ Layer 2 (multiclass, attacks only):
 - Trained and evaluated on a single 2017 lab-generated dataset with documented label
   noise (Engelen et al. 2021). Absolute metrics do not transfer to other networks.
 - Random-split metrics are optimistic for novel attacks; see cross-day numbers above.
+- Does not transfer to CSE-CIC-IDS2018 (same lab, different network): a Layer 1 model
+  trained the same way on all of CIC-IDS2017 has recall 0.004 at a 1% benign alert
+  budget on 2018 (reports/cross_dataset_2018.md).
 - Web-attack identification (Layer 2) is weak; pair with WAF/application logs.
 - Ultra-rare classes (Heartbleed n=11, Infiltration n=36, SQLi n=21 in the full data)
   have anecdotal-quality metrics.

@@ -43,6 +43,7 @@ On the Wed+Thu holdout every attack type (DoS variants, web attacks, Infiltratio
 - The split happens before benign downsampling, the test set keeps natural prevalence (16.9% attack), and the scaler is fit on training data only.
 - Shuffled-label sanity check: test PR-AUC 0.618 against a no-skill baseline of 0.680, so the pipeline does not leak labels (`reports/eda_baseline_validation_v2.json`, experiment 6).
 - Destination Port alone reaches PR-AUC 0.753 against a no-skill of 0.680 and 0.995 for all 71 features. Dropping it leaves 0.994. In v2 the port is not the shortcut it looked like in v1, where it alone reached 0.817 (experiment 4; these experiments use logistic regression on a test set that is 68% attack).
+- Models trained on CIC-IDS2017 do not transfer to CSE-CIC-IDS2018, a newer dataset from the same lab on a different network. At a 1% false positive budget, logistic regression catches 2.4% of 2018 attack flows, LightGBM 0.4%, and Isolation Forest 0.6%. This includes attack types they trained on: the same attacks look different on the new network. Combining a supervised model with Isolation Forest did not help under an honest selection procedure. Details: `reports/cross_dataset_2018.md`.
 - CIC-IDS2017 has known flow-construction and labeling defects, documented by Engelen, Rimmer & Joosen (2021), "Troubleshooting an Intrusion Detection Dataset: the CICIDS2017 Case Study." I did not correct for these, so they bound every number here.
 
 ## Models
@@ -53,7 +54,7 @@ type (14 classes, macro F1 0.910 on the random split). Details: `models/MODEL_CA
 
 ## Limitations
 
-- The data is lab-generated traffic from 2017. Scores will not carry over to a real network.
+- The data is lab-generated traffic from 2017. Scores do not carry over even to the same lab's 2018 network (see above).
 - Labels are noisy (see Engelen et al. above).
 - Some classes are tiny: Heartbleed has 11 flows, SQL injection 21, Infiltration 36. Their metrics are anecdotal.
 - Flow features describe packet sizes, counts, and timing. They cannot see payloads, so attacks that differ only in content (XSS vs. SQL injection) are hard to separate.
@@ -110,9 +111,10 @@ notebooks/
 reports/              validation JSONs, dataset manifest, threshold analysis, SOC playbook,
                       notebook review, figures
 scripts/
-  build_dataset.py          raw CSVs -> data/processed/cicids2017_clean_v2.parquet + manifest
+  build_dataset.py          raw CSVs -> cleaned parquet + manifest (--year 2018 for CSE-CIC-IDS2018)
   train_models.py           trains layers 1 and 2, writes models/ and metadata
   crossday_threshold_analysis.py   recall at fixed FPR on held-out days
+  combined_model.py         supervised + Isolation Forest, tested cross-day and on CSE-CIC-IDS2018
   validate_eda_baseline.py  7-experiment evaluation-protocol checks
   attack_clustering.py      KMeans clusters of attack flows -> MITRE techniques
   test_overfitting*.py, smoke_test.py   diagnostics
@@ -123,13 +125,17 @@ tests/                pytest suite for the API, classifier, and MITRE mapping
 ## How to reproduce
 
 Download the CIC-IDS2017 MachineLearningCVE CSVs from the Canadian Institute for Cybersecurity and
-put the 8 files in `cic-ids-eda/data/raw/MachineLearningCVE/`. Then:
+put the 8 files in `cic-ids-eda/data/raw/MachineLearningCVE/`. For the 2018 test, download the
+CSE-CIC-IDS2018 "Processed Traffic Data for ML Algorithms" CSVs (public S3 bucket `cse-cic-ids2018`,
+about 6.5 GB) into `data/raw/CSE-CIC-IDS2018/`. Then:
 
 ```sh
 pip install -r requirements.txt
 python scripts/build_dataset.py                 # -> data/processed/cicids2017_clean_v2.parquet
 python scripts/train_models.py                  # -> models/ artifacts and model_metadata.json
 python scripts/crossday_threshold_analysis.py   # -> reports/crossday_threshold_analysis.json + PR curves
+python scripts/build_dataset.py --year 2018     # -> data/processed/cicids2018_clean.parquet (needs the 2018 CSVs)
+python scripts/combined_model.py                # -> reports/combined_model.json
 python scripts/validate_eda_baseline.py --data data/processed/cicids2017_clean_v2.parquet --tag _v2
 pytest tests/
 ```
