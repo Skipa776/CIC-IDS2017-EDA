@@ -26,3 +26,7 @@ mcp/
 
 # machine-local Claude Code settings
 .claude/settings.local.json
+
+# AI tooling (kept locally, not tracked)
+.claude/
+CLAUDE.md
