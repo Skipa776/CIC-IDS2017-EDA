@@ -48,8 +48,14 @@ Layer 1 (binary):
                     and SQL Injection (0.60, n=5); full table in metadata.
 
 Layer 1 cross-day holdout (train on other days, test on held-out days):
-  test Friday (Bot/PortScan/DDoS unseen):        PR-AUC 0.824  (no-skill 0.358)
-  test Wed+Thu (DoS family/web/Heartbleed unseen): PR-AUC 0.466  (no-skill 0.197)
+  test Friday (Bot/PortScan/DDoS unseen):
+    PR-AUC 0.824  (no-skill 0.358)   Precision 0.678   Recall 0.011
+  test Wed+Thu (DoS family/web/Heartbleed unseen):
+    PR-AUC 0.466  (no-skill 0.197)   Precision 0.176   Recall 0.041
+  (precision and recall at the default 0.5 threshold)
+
+  At the default threshold, the model catches only 1-4% of attack flows from
+  attack types it never trained on.
 
   NOTE: In CICIDS2017 each attack type occurs on exactly one day, so cross-day
   performance measures generalization to UNSEEN ATTACK BEHAVIOR. These numbers,

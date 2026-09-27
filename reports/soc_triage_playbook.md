@@ -14,15 +14,17 @@ across 6 tactics**; clustering surfaced 14 behavior clusters dominated by 6 of t
 
 ## 1. What to trust — and what not to
 
-**Trust (random-split test, natural prevalence):** layer 1 catches ≥ 93% of every attack family
-at a 0.4% false-positive rate on benign traffic; layer 2 names DoS/DDoS/PortScan/brute-force
-types with F1 ≥ 0.99.
+**Trust (random-split test, natural prevalence):** for attack types that were in the training
+data, layer 1 catches ≥ 93% of flows in every family with more than 9 test flows (Infiltration,
+n=9, is 0.67; SQL injection, n=5, is 0.60) at a 0.4% false-positive rate on benign traffic.
+This does not hold for attack types the model has not seen (see the next table). Layer 2 names
+DoS/DDoS/PortScan/brute-force types with F1 ≥ 0.99.
 
 **Do NOT trust blindly:**
 
 | Blind spot | Evidence | Operational consequence |
 |---|---|---|
-| **Novel attack behavior** | Cross-day holdout PR-AUC drops to **0.824** (Friday attacks unseen) and **0.466** (DoS-family/web/Heartbleed unseen) | A "no alerts" day does not mean a clean network for attack types the model never trained on. Keep signature/WAF/EDR controls primary for novelty. |
+| **Novel attack behavior** | Cross-day holdout PR-AUC drops to **0.824** (Friday attacks unseen) and **0.466** (DoS-family/web/Heartbleed unseen). At the default 0.5 threshold, recall is **0.011** (Friday) and **0.041** (Wed+Thu). | A "no alerts" day does not mean a clean network for attack types the model never trained on. Keep signature/WAF/EDR controls primary for novelty. |
 | **Web-attack type identification** | Layer 2 F1: XSS 0.51, Brute Force 0.58 (recall 0.45), SQLi 0.67 | Layer 1 will flag web attacks (~97% recall), but the *named type* is unreliable — confirm via WAF/application logs before acting on the label. |
 | **Ultra-rare classes** | Heartbleed n=1, Infiltration n=9, SQLi n=5 in the test set | Metrics are anecdotal; treat any such alert as unvalidated and escalate manually. |
 | **Infiltration recall 0.67** | Layer 1 per-attack table | Lowest binary recall of any family; pair with egress monitoring/DLP (see §2.8). |
