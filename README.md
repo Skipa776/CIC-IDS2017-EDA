@@ -72,7 +72,7 @@ models/               MODEL_CARD.txt, model_metadata.json, mitre_mapping.json tr
 notebooks/
   cicids2017_eda.ipynb      EDA, logistic regression and Isolation Forest baselines
   attack_types.ipynb        per-attack analysis, random forest multiclass
-  day_of_the_weeks.ipynb    unfinished stub
+  archive/day_of_the_weeks.ipynb   unfinished stub, archived (never fully run)
 reports/              validation JSONs, dataset manifest, threshold analysis, SOC playbook,
                       notebook review, figures
 scripts/
