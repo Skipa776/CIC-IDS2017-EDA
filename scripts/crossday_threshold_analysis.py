@@ -49,7 +49,7 @@ TITLES = {
 
 def threshold_at_fpr(y_true, scores, target_fpr):
     """Lowest score threshold whose FPR on benign stays at or below target_fpr."""
-    fpr, tpr, thresholds = roc_curve(y_true, scores)
+    fpr, tpr, thresholds = roc_curve(y_true, scores, drop_intermediate=False)
     i = np.searchsorted(fpr, target_fpr, side="right") - 1
     return float(thresholds[i]), float(fpr[i]), float(tpr[i])
 
