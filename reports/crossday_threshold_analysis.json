@@ -1,0 +1,202 @@
+{
+  "features": [
+    "Destination Port",
+    "Flow Duration",
+    "Flow Bytes/s",
+    "Flow Packets/s",
+    "Total Fwd Packets",
+    "Total Backward Packets",
+    "Fwd Packet Length Mean",
+    "Bwd Packet Length Mean",
+    "Packet Length Mean",
+    "Packet Length Std",
+    "SYN Flag Count",
+    "FIN Flag Count",
+    "RST Flag Count",
+    "ACK Flag Count",
+    "Init_Win_bytes_forward",
+    "Init_Win_bytes_backward",
+    "Flow IAT Mean",
+    "Flow IAT Std",
+    "Fwd IAT Mean",
+    "Bwd IAT Mean"
+  ],
+  "splits": {
+    "random_split": {
+      "n_test": 503853,
+      "pr_auc": 0.9997257497503256,
+      "no_skill_pr_auc": 0.16871786016953358,
+      "recall_at_fpr": {
+        "0.001": {
+          "threshold": 0.6462856518838107,
+          "actual_fpr": 0.0009932098824383302,
+          "recall": 0.9948476043713018
+        },
+        "0.01": {
+          "threshold": 0.09968207298204702,
+          "actual_fpr": 0.009982236823256392,
+          "recall": 0.9998353115552471
+        },
+        "0.05": {
+          "threshold": 0.011016651257112446,
+          "actual_fpr": 0.04999713497149297,
+          "recall": 0.9999411826983026
+        }
+      },
+      "per_attack_recall_at_fpr_0.01": {
+        "Bot": {
+          "n_test": 391,
+          "recall": 0.9820971867007673
+        },
+        "DDoS": {
+          "n_test": 25641,
+          "recall": 0.9999219999219999
+        },
+        "DoS GoldenEye": {
+          "n_test": 1974,
+          "recall": 1.0
+        },
+        "DoS Hulk": {
+          "n_test": 34598,
+          "recall": 1.0
+        },
+        "DoS Slowhttptest": {
+          "n_test": 1006,
+          "recall": 1.0
+        },
+        "DoS slowloris": {
+          "n_test": 1095,
+          "recall": 1.0
+        },
+        "FTP-Patator": {
+          "n_test": 1134,
+          "recall": 1.0
+        },
+        "Heartbleed": {
+          "n_test": 1,
+          "recall": 1.0
+        },
+        "Infiltration": {
+          "n_test": 9,
+          "recall": 0.8888888888888888
+        },
+        "PortScan": {
+          "n_test": 18094,
+          "recall": 0.9998894661213662
+        },
+        "SSH-Patator": {
+          "n_test": 631,
+          "recall": 0.9984152139461173
+        },
+        "Web Attack - Brute Force": {
+          "n_test": 297,
+          "recall": 1.0
+        },
+        "Web Attack - Sql Injection": {
+          "n_test": 5,
+          "recall": 1.0
+        },
+        "Web Attack - XSS": {
+          "n_test": 133,
+          "recall": 0.9924812030075187
+        }
+      }
+    },
+    "test_friday": {
+      "n_test": 614800,
+      "pr_auc": 0.824076292103209,
+      "no_skill_pr_auc": 0.35798471047495123,
+      "recall_at_fpr": {
+        "0.001": {
+          "threshold": 0.7659989995706233,
+          "actual_fpr": 0.00045349635556141073,
+          "recall": 0.0018628827428903761
+        },
+        "0.01": {
+          "threshold": 0.0741462853228447,
+          "actual_fpr": 0.009736237399008389,
+          "recall": 0.13764431661736842
+        },
+        "0.05": {
+          "threshold": 0.004422722472032775,
+          "actual_fpr": 0.04947417224247614,
+          "recall": 0.5953773246277643
+        }
+      },
+      "per_attack_recall_at_fpr_0.01": {
+        "Bot": {
+          "n_test": 1948,
+          "recall": 0.0
+        },
+        "DDoS": {
+          "n_test": 128011,
+          "recall": 0.23313621485653577
+        },
+        "PortScan": {
+          "n_test": 90130,
+          "recall": 0.00499278819482969
+        }
+      }
+    },
+    "test_wed_thu": {
+      "n_test": 992107,
+      "pr_auc": 0.465834623918901,
+      "no_skill_pr_auc": 0.19736278445772482,
+      "recall_at_fpr": {
+        "0.001": {
+          "threshold": 0.9954903228854124,
+          "actual_fpr": 0.0005374845222038875,
+          "recall": 0.00027067745971757616
+        },
+        "0.01": {
+          "threshold": 0.9941520555524954,
+          "actual_fpr": 0.009918347561603513,
+          "recall": 0.00027067745971757616
+        },
+        "0.05": {
+          "threshold": 0.06642485338876523,
+          "actual_fpr": 0.049998618614545735,
+          "recall": 0.1500370266336406
+        }
+      },
+      "per_attack_recall_at_fpr_0.01": {
+        "DoS GoldenEye": {
+          "n_test": 10286,
+          "recall": 0.0
+        },
+        "DoS Hulk": {
+          "n_test": 172717,
+          "recall": 0.00030686035537903046
+        },
+        "DoS Slowhttptest": {
+          "n_test": 5228,
+          "recall": 0.0
+        },
+        "DoS slowloris": {
+          "n_test": 5384,
+          "recall": 0.0
+        },
+        "Heartbleed": {
+          "n_test": 11,
+          "recall": 0.0
+        },
+        "Infiltration": {
+          "n_test": 36,
+          "recall": 0.0
+        },
+        "Web Attack - Brute Force": {
+          "n_test": 1470,
+          "recall": 0.0
+        },
+        "Web Attack - Sql Injection": {
+          "n_test": 21,
+          "recall": 0.0
+        },
+        "Web Attack - XSS": {
+          "n_test": 652,
+          "recall": 0.0
+        }
+      }
+    }
+  }
+}
