@@ -19,17 +19,14 @@ COLORS = {
     "logreg": "#eb6834",
     "iforest": "#1baf7a",
     "autoencoder": "#eda100",
-    "lgbm+autoencoder": "#e87ba4",
-    "lgbm+iforest": "#e87ba4",
-    "logreg+autoencoder": "#008300",
-    "logreg+iforest": "#008300",
+    "lgbm+anomaly": "#e87ba4",
+    "logreg+anomaly": "#008300",
 }
 NAMES = {
     "lgbm": "LightGBM", "logreg": "Logistic regression", "iforest": "Isolation Forest",
-    "autoencoder": "Autoencoder", "lgbm+autoencoder": "Hybrid: LightGBM + autoencoder",
-    "lgbm+iforest": "Hybrid: LightGBM + Isolation Forest",
-    "logreg+autoencoder": "Hybrid: log. regression + autoencoder",
-    "logreg+iforest": "Hybrid: log. regression + Isolation Forest",
+    "autoencoder": "Autoencoder",
+    "lgbm+anomaly": "Hybrid: LightGBM + anomaly model",
+    "logreg+anomaly": "Hybrid: log. regression + anomaly model",
 }
 INK, MUTED, GRID = "#1f1f1e", "#6b6a63", "#e4e3dc"
 
@@ -64,34 +61,40 @@ def recall_table(summary, folds, budget="0.01"):
 
 
 def recall_dots(summary, folds, title, fold_labels=None, budget="0.01"):
-    """One row per fold; per detector a dot at the median recall, whisker = min-max over seeds."""
+    """One row per fold x detector: dot at the median recall, whisker = min-max over seeds.
+
+    Filled dot = actual test FPR stayed within budget; hollow = over budget (not quotable).
+    Rows are labelled with the detector name, so identity never rests on color alone.
+    """
     fold_labels = fold_labels or {f: f for f in folds}
-    dets = []
-    for f in folds:
-        dets += [d for d in summary["folds"][f]["detectors"] if d not in dets]
-    fig, ax = plt.subplots(figsize=(10, 1.1 + 0.9 * len(folds)))
-    step = 0.7 / max(1, len(dets) - 1)
-    for i, fold in enumerate(folds):
-        for j, det in enumerate(dets):
-            d = summary["folds"][fold]["detectors"].get(det)
-            if d is None:
-                continue
-            r = d["budgets"][budget]["recall"]
-            y = i - 0.35 + j * step
-            ax.plot([r["min"], r["max"]], [y, y], color=COLORS[det], linewidth=2, solid_capstyle="round")
-            ax.plot(r["median"], y, "o", color=COLORS[det], markersize=7, markeredgecolor="white",
-                    markeredgewidth=1.5, label=NAMES[det] if i == 0 or det not in summary["folds"][folds[0]]["detectors"] else None)
-            ax.text(r["max"] + 0.012, y, f"{r['median']:.2f}", va="center", fontsize=8, color=INK)
-    ax.set_yticks(range(len(folds)))
-    ax.set_yticklabels([fold_labels[f] for f in folds])
-    ax.invert_yaxis()
-    ax.set_xlim(0, 1.08)
-    ax.set_xlabel(f"Recall: share of test attack flows flagged, at a {float(budget):.0%} validation false-alarm budget")
+    rows, y, ticks, headers = [], 0, [], []
+    for fold in folds:
+        headers.append((y, fold_labels[fold]))
+        y += 1
+        for det, d in summary["folds"][fold]["detectors"].items():
+            rows.append((y, det, d))
+            ticks.append((y, NAMES[det]))
+            y += 1
+        y += 0.6
+    fig, ax = plt.subplots(figsize=(10, 0.32 * y + 1.2))
+    for yy, det, d in rows:
+        r = d["budgets"][budget]["recall"]
+        over = d["budget_violated"][budget]
+        ax.plot([r["min"], r["max"]], [yy, yy], color=COLORS[det], linewidth=2, solid_capstyle="round")
+        ax.plot(r["median"], yy, "o", markersize=7, markeredgewidth=1.8, markeredgecolor=COLORS[det],
+                markerfacecolor="white" if over else COLORS[det])
+        ax.text(r["max"] + 0.012, yy, f"{r['median']:.2f}" + ("  over budget" if over else ""),
+                va="center", fontsize=8, color=MUTED if over else INK)
+    for yy, label in headers:
+        ax.text(-0.01, yy, label, ha="right", va="center", fontsize=9.5, fontweight="bold", color=INK,
+                transform=ax.get_yaxis_transform())
+    ax.set_yticks([t for t, _ in ticks])
+    ax.set_yticklabels([n for _, n in ticks], fontsize=8.5)
+    ax.set_ylim(y - 0.4, -0.6)
+    ax.set_xlim(0, 1.15)
+    ax.set_xlabel(f"Recall at a {float(budget):.0%} validation false-alarm budget  ·  "
+                  "dot = median, line = seed range, hollow = over budget", fontsize=9)
     ax.set_title(title, loc="left", fontsize=12, color=INK, fontweight="bold")
     style(ax)
-    handles, labels = ax.get_legend_handles_labels()
-    seen = dict(zip(labels, handles))
-    ax.legend(seen.values(), seen.keys(), loc="upper center", bbox_to_anchor=(0.5, -0.18 - 0.1 / len(folds)),
-              ncol=3, frameon=False, fontsize=8.5)
     fig.tight_layout()
     return fig

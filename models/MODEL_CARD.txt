@@ -54,14 +54,21 @@ all 71 inputs; the historically selected 20-input subset is a diagnostic.
 These controls improve independence under the stated group proxy, but cannot
 verify session or future-network independence without additional metadata/data.
 
-Raw-derived, profile-purged day tests (71-input candidate, seeds 42/43/44):
-  Friday: AP 0.632-0.680; recall 21.26-45.89%; realized FPR 1.99-2.32%.
-  Wed+Thu: AP 0.221-0.400; recall 0-0.0063%; realized FPR 0.61-0.72%.
-  Forward Thursday: AP 0.0046-0.0051; recall 0.41-0.63%; realized FPR 1.04-1.15%.
+STATUS: the served 20-input model is NOT validated on unseen attacks. Its 20 inputs
+were chosen from feature importance fit on all data before a split
+(notebooks/archive/attack_types.ipynb), so it is kept only as the API artifact.
+
+Raw-derived whole-day tests (71-input candidate, seeds 42/43/44; day boundary is the
+separation unit, profiles are no longer purged across days):
+  Friday: AP 0.771-0.788; recall 21.6%-43.9%; realized FPR 1.22%-1.31%.
+  Wed+Thu: AP 0.219-0.544; recall 1.0%-1.3%; realized FPR 0.71%-1.20%.
+  Forward Thursday: AP 0.651-0.762; recall 81.7%-86.1%; realized FPR 0.82%-1.46%.
+    This recall rides on one victim-server TCP window value carried by 83% of
+    Thursday's web-attack flows (reports/results/explain_2017_B.json); it is an
+    artifact, not attack detection.
 All thresholds target 1% validation benign FPR, then stay frozen for testing.
-These are research candidate metrics, not re-evaluation or replacement of the
-stored 20-input API artifacts. Same-capture grouping/blocking still produces
-strong ranking, so the identified leakage does not explain every high score.
+The forward-in-time evaluation that supersedes these (all detectors, 2017 and 2018
+folds, 5 seeds) is in reports/results/ and notebooks/03-06.
 
 Historical Layer 1 cross-day holdout (v2 parquet, before raw/profile-purge audit):
   test Friday (Bot/PortScan/DDoS unseen):
@@ -114,7 +121,10 @@ Layer 2 (multiclass, all true test attacks, bypassing the Layer 1 gate):
 ================================================================================
 
   python scripts/build_dataset.py      # rebuild data/processed/cicids2017_clean_v2.parquet
-  python scripts/audit_leakage.py       # primary raw-file grouped/purged evaluation
+  python scripts/build_dataset.py --year 2017 --no-dedup   # evaluation copies (also --year 2018)
+  python scripts/run_pipeline.py        # forward-in-time evaluation -> reports/results/
+  python scripts/summarize_results.py   # -> reports/results/summary.json
+  python scripts/audit_leakage.py       # raw-file grouped/purged same-capture audit
   python scripts/train_models.py       # historical API artifact reproduction only
   python scripts/evaluate_generalization.py --models lgbm20 lgbm71 logreg20 logreg71 lgbm71_no_network
   pytest tests/                        # API, evaluation and MITRE mapping checks

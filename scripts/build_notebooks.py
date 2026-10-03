@@ -247,24 +247,37 @@ pd.DataFrame({h: {"1. beats best single model": r["criterion_1_beats_best_single
 rows = []
 for h, r in crit.items():
     for run in r["criterion_1_beats_best_single"]["runs"]:
-        rows.append({"hybrid": h, **run})
-pd.DataFrame(rows).pivot_table(index=["hybrid", "fold"], values=["hybrid", "best_single"], aggfunc="median").round(3)"""),
+        rows.append({"detector": NAMES[h], "fold": run["fold"], "seed": run["seed"],
+                     "hybrid recall": run["hybrid"], "best single-model recall": run["best_single"]})
+pd.DataFrame(rows).pivot_table(index=["detector", "fold"], values=["hybrid recall", "best single-model recall"],
+                               aggfunc="median").round(3)"""),
         code("""# Budget split chosen on validation (share of the 1% budget given to the supervised model), per seed
 pd.DataFrame({f: {h: s for h, s in d.get("hybrid_shares_chosen", {}).items()}
               for f, d in summary["folds"].items() if d.get("hybrid_shares_chosen")}).T"""),
-        code("""# Recall against actual test false-alarm rate, every fold, budgets 0.1% / 1% / 5%
-fig, ax = plt.subplots(figsize=(10, 5))
-for f, fold in summary["folds"].items():
-    for det, d in fold["detectors"].items():
-        xs = [d["budgets"][b]["fpr"]["median"] for b in ["0.001", "0.01", "0.05"]]
-        ys = [d["budgets"][b]["recall"]["median"] for b in ["0.001", "0.01", "0.05"]]
-        ax.plot(xs, ys, "-o", color=COLORS[det], alpha=0.55, markersize=4, linewidth=1.2)
-for det in ["lgbm", "logreg", "iforest", "autoencoder", "lgbm+autoencoder", "logreg+autoencoder"]:
-    ax.plot([], [], "-o", color=COLORS[det], label=NAMES[det])
-ax.set_xscale("log"); ax.set_xlabel("Actual test false positive rate (median over seeds, log scale)")
-ax.set_ylabel("Recall"); ax.set_ylim(0, 1.02)
-ax.set_title("Each line is one detector on one fold, at budgets 0.1%, 1% and 5%", loc="left", fontweight="bold", color=INK)
-ax.legend(frameon=False, fontsize=8, ncol=2); style(ax); ax.grid(axis="y", color="#e4e3dc"); fig.tight_layout(); plt.show()"""),
+        code("""# Hybrid vs the best single model on the criterion folds (median over seeds, 1% budget)
+labels = {"2017_B": "2017 B: test Thu", "2017_C": "2017 C: test Fri", "2018_new_family_bot": "2018: new family (Bot)"}
+fig, ax = plt.subplots(figsize=(10, 3.6))
+y = 0
+ticks = []
+for h in crit:
+    runs = pd.DataFrame(crit[h]["criterion_1_beats_best_single"]["runs"])
+    for fold, label in labels.items():
+        r = runs[runs.fold == fold]
+        hyb, single = r["hybrid"].median(), r["best_single"].median()
+        ax.plot([hyb, single], [y, y], color="#e4e3dc", linewidth=3, zorder=1)
+        ax.plot(single, y, "o", color=MUTED, markersize=8, zorder=2)
+        ax.plot(hyb, y, "o", color=COLORS[h], markersize=8, zorder=3)
+        ax.text(max(hyb, single) + 0.02, y, f"hybrid {hyb:.2f} vs best single {single:.2f}", va="center", fontsize=8, color=INK)
+        ticks.append((y, f"{NAMES[h].replace('Hybrid: ', '')} | {label}"))
+        y += 1
+    y += 0.5
+ax.set_yticks([t for t, _ in ticks]); ax.set_yticklabels([l for _, l in ticks], fontsize=8.5); ax.invert_yaxis()
+ax.set_xlim(0, 1.25); ax.set_xlabel("Recall at a 1% validation false-alarm budget (median of 5 seeds); grey = best single model")
+wins = sum(x["pass"] for h in crit for x in crit[h]["criterion_1_beats_best_single"]["runs"])
+total = sum(len(crit[h]["criterion_1_beats_best_single"]["runs"]) for h in crit)
+ax.set_title("The hybrid never beats the best single model" if wins == 0 else
+             f"The hybrid beats the best single model in {wins} of {total} runs", loc="left", fontweight="bold", color=INK)
+style(ax); fig.tight_layout(); plt.show()"""),
         md(TEXT["05_body"]),
     ])
 

@@ -32,6 +32,19 @@ def span(values):
     return {"min": float(min(values)), "median": float(np.median(values)), "max": float(max(values))} if values else None
 
 
+def canonical(data):
+    """Hybrids pick their anomaly partner per seed on validation; key them as '<sup>+anomaly'."""
+    for run in data["runs"]:
+        for key in [k for k in run["detectors"] if "+" in k and not k.endswith("+anomaly")]:
+            sup, partner = key.split("+")
+            run["detectors"][f"{sup}+anomaly"] = run["detectors"].pop(key)
+            run["detectors"][f"{sup}+anomaly"]["partner"] = partner
+            choice = run.get("hybrid_choices", {}).pop(key, None)
+            if choice is not None:
+                run["hybrid_choices"][f"{sup}+anomaly"] = choice
+    return data
+
+
 def summarize_fold(data):
     runs = data["runs"]
     detectors = list(runs[0]["detectors"])
@@ -39,9 +52,11 @@ def summarize_fold(data):
            "unseen_test_families": runs[0]["unseen_test_families"],
            "seen_test_families": runs[0]["seen_test_families"],
            "prevalence": runs[0]["detectors"][detectors[0]]["prevalence"],
+           "n_attack": runs[0]["detectors"][detectors[0]]["n_attack"],
            "n_test": runs[0]["detectors"][detectors[0]]["n_test"],
            "gates": {k: span([r["gates"][k] for r in runs]) for k in
                      ["exact_twin_test_fraction", "exact_twin_attack_rows", "shuffled_label_ap", "best_single_feature_ap"]},
+           "best_single_feature": sorted({data["features"][r["gates"]["best_single_feature_index"]] for r in runs}),
            "detectors": {}}
     for name in detectors:
         reps = [r["detectors"][name] for r in runs]
@@ -64,12 +79,14 @@ def summarize_fold(data):
     if "hybrid_choices" in runs[0] and runs[0]["hybrid_choices"]:
         out["hybrid_shares_chosen"] = {h: [r["hybrid_choices"][h]["share_supervised"] for r in runs]
                                        for h in runs[0]["hybrid_choices"]}
+        out["hybrid_partner_chosen"] = {h: [r["hybrid_choices"][h]["anomaly"] for r in runs]
+                                        for h in runs[0]["hybrid_choices"]}
     return out
 
 
 def criteria(folds):
     report = {}
-    for hybrid in ["lgbm+autoencoder", "lgbm+iforest", "logreg+autoencoder", "logreg+iforest"]:
+    for hybrid in ["lgbm+anomaly", "logreg+anomaly"]:
         c1, c2, c3, seen = [], [], [], False
         for name, data in folds.items():
             for run in data["runs"]:
@@ -103,7 +120,7 @@ def criteria(folds):
 
 
 def main():
-    folds = {p.stem: json.loads(p.read_text()) for p in sorted(RESULTS.glob("20*.json"))}
+    folds = {p.stem: canonical(json.loads(p.read_text())) for p in sorted(RESULTS.glob("20*.json"))}
     incomplete = [n for n, d in folds.items() if not d.get("complete")]
     summary = {
         "note": "Ranges are min-max over seeds, not confidence intervals. Thresholds frozen on validation benign.",
