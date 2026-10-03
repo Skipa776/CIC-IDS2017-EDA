@@ -1,0 +1,382 @@
+{
+ "detector": "autoencoder",
+ "metric": "ROC AUC on the test set (benign weights do not change it: benign is sampled uniformly)",
+ "folds": {
+  "2017_A": {
+   "question": "unseen family",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.9328122373731766,
+     "average_precision": 0.8873920538088536,
+     "prevalence": 0.36408566006734316
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.9135444336660488,
+     "average_precision": 0.8731293096289529,
+     "prevalence": 0.36408566006734316
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.9026158989577957,
+     "average_precision": 0.8538677015053444,
+     "prevalence": 0.36408566006734316
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.9377940617394959,
+     "average_precision": 0.897045842248167,
+     "prevalence": 0.36408566006734316
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.9404879465646354,
+     "average_precision": 0.8988818751204661,
+     "prevalence": 0.36408566006734316
+    }
+   ],
+   "roc_auc": {
+    "min": 0.9026158989577957,
+    "median": 0.9328122373731766,
+    "max": 0.9404879465646354
+   }
+  },
+  "2017_B": {
+   "question": "unseen family",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.7254100986371652,
+     "average_precision": 0.008424826873982614,
+     "prevalence": 0.004831981788487411
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.6246922866074549,
+     "average_precision": 0.006083332429149066,
+     "prevalence": 0.004831981788487411
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.520803707386126,
+     "average_precision": 0.004685563234368088,
+     "prevalence": 0.004831981788487411
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.5387569211474179,
+     "average_precision": 0.004923941318441657,
+     "prevalence": 0.004831981788487411
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.5992785681326223,
+     "average_precision": 0.00563045591287999,
+     "prevalence": 0.004831981788487411
+    }
+   ],
+   "roc_auc": {
+    "min": 0.520803707386126,
+    "median": 0.5992785681326223,
+    "max": 0.7254100986371652
+   }
+  },
+  "2017_C": {
+   "question": "unseen family",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.9174761741257598,
+     "average_precision": 0.7436134263671195,
+     "prevalence": 0.4109818108332349
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.9153944530623641,
+     "average_precision": 0.7403269059420898,
+     "prevalence": 0.4109818108332349
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.9275700110578506,
+     "average_precision": 0.7643180750652645,
+     "prevalence": 0.4109818108332349
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.9137613450663485,
+     "average_precision": 0.7448295368866663,
+     "prevalence": 0.4109818108332349
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.9269519323694247,
+     "average_precision": 0.7678149832422592,
+     "prevalence": 0.4109818108332349
+    }
+   ],
+   "roc_auc": {
+    "min": 0.9137613450663485,
+    "median": 0.9174761741257598,
+    "max": 0.9275700110578506
+   }
+  },
+  "2018_new_tool_dos": {
+   "question": "same family, new tool",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.21289913611943634,
+     "average_precision": 0.46595658870913903,
+     "prevalence": 0.574687112650905
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.21997684595421416,
+     "average_precision": 0.48348199433468597,
+     "prevalence": 0.574687112650905
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.13958185807160112,
+     "average_precision": 0.42247891582540864,
+     "prevalence": 0.574687112650905
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.023067010454072553,
+     "average_precision": 0.3837020841973748,
+     "prevalence": 0.574687112650905
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.021403711368141055,
+     "average_precision": 0.3832373122014055,
+     "prevalence": 0.574687112650905
+    }
+   ],
+   "roc_auc": {
+    "min": 0.021403711368141055,
+    "median": 0.13958185807160112,
+    "max": 0.21997684595421416
+   }
+  },
+  "2018_new_tool_ddos": {
+   "question": "same family, new tool",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.002570444705648932,
+     "average_precision": 0.44158045877806534,
+     "prevalence": 0.654560994087706
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.0025155283851524607,
+     "average_precision": 0.44156482763688465,
+     "prevalence": 0.654560994087706
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.0025704435839257805,
+     "average_precision": 0.44158258069546436,
+     "prevalence": 0.654560994087706
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.0025704610507577058,
+     "average_precision": 0.4415916211916115,
+     "prevalence": 0.654560994087706
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.0025704438643565685,
+     "average_precision": 0.44158365506921093,
+     "prevalence": 0.654560994087706
+    }
+   ],
+   "roc_auc": {
+    "min": 0.0025155283851524607,
+    "median": 0.0025704438643565685,
+    "max": 0.0025704610507577058
+   }
+  },
+  "2018_same_attack_web": {
+   "question": "same attack, later date",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.7878446165915425,
+     "average_precision": 0.008225394577198423,
+     "prevalence": 0.0005430527624691055
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.8250107522679831,
+     "average_precision": 0.01445350249779778,
+     "prevalence": 0.0005430527624691055
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.8055785486800855,
+     "average_precision": 0.009141531696927805,
+     "prevalence": 0.0005430527624691055
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.8493742432749012,
+     "average_precision": 0.0065535693946293366,
+     "prevalence": 0.0005430527624691055
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.8043896085278927,
+     "average_precision": 0.006885879237357836,
+     "prevalence": 0.0005430527624691055
+    }
+   ],
+   "roc_auc": {
+    "min": 0.7878446165915425,
+    "median": 0.8055785486800855,
+    "max": 0.8493742432749012
+   }
+  },
+  "2018_same_attack_infiltration": {
+   "question": "same attack, later date",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.5823937552995051,
+     "average_precision": 0.34310609117428914,
+     "prevalence": 0.2830948244960984
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.590297095794888,
+     "average_precision": 0.3623746377116374,
+     "prevalence": 0.2830948244960984
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.5963177408214907,
+     "average_precision": 0.38189844584024146,
+     "prevalence": 0.2830948244960984
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.5975146205524278,
+     "average_precision": 0.3757726696075376,
+     "prevalence": 0.2830948244960984
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.584646378771326,
+     "average_precision": 0.3455908475926719,
+     "prevalence": 0.2830948244960984
+    }
+   ],
+   "roc_auc": {
+    "min": 0.5823937552995051,
+    "median": 0.590297095794888,
+    "max": 0.5975146205524278
+   }
+  },
+  "2018_new_family_bot": {
+   "question": "unseen family",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.5738044786540517,
+     "average_precision": 0.3858069586646332,
+     "prevalence": 0.27415793411381073
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.7019194122455437,
+     "average_precision": 0.4088823165464042,
+     "prevalence": 0.27415793411381073
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.569634189944944,
+     "average_precision": 0.32589311673064836,
+     "prevalence": 0.27415793411381073
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.7387178838089907,
+     "average_precision": 0.4326829934556329,
+     "prevalence": 0.27415793411381073
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.6546260256394778,
+     "average_precision": 0.36865323756959845,
+     "prevalence": 0.27415793411381073
+    }
+   ],
+   "roc_auc": {
+    "min": 0.569634189944944,
+    "median": 0.6546260256394778,
+    "max": 0.7387178838089907
+   }
+  },
+  "2017_to_2018": {
+   "question": "new network, one year later",
+   "runs": [
+    {
+     "seed": 42,
+     "roc_auc": 0.5858925178219458,
+     "average_precision": 0.2013672633084209,
+     "prevalence": 0.1702161753991253
+    },
+    {
+     "seed": 43,
+     "roc_auc": 0.5182801544453131,
+     "average_precision": 0.19162080671621226,
+     "prevalence": 0.1702161753991253
+    },
+    {
+     "seed": 44,
+     "roc_auc": 0.4817360538350294,
+     "average_precision": 0.18029509180528194,
+     "prevalence": 0.1702161753991253
+    },
+    {
+     "seed": 45,
+     "roc_auc": 0.41266021476049236,
+     "average_precision": 0.1503512897625247,
+     "prevalence": 0.1702161753991253
+    },
+    {
+     "seed": 46,
+     "roc_auc": 0.58785389602236,
+     "average_precision": 0.21191884546983963,
+     "prevalence": 0.1702161753991253
+    }
+   ],
+   "roc_auc": {
+    "min": 0.41266021476049236,
+    "median": 0.5182801544453131,
+    "max": 0.58785389602236
+   }
+  }
+ },
+ "provenance": {
+  "git_commit": "8221751c857d2f0602d54780e0cec707c98858dc",
+  "git_dirty": false,
+  "data_sha256": {
+   "data/processed/cicids2017_eval.parquet": "687b883b04c6178cc035e312b396891919e2778deb4ab0990b36ad954774c956",
+   "data/processed/cicids2018_eval.parquet": "b672cec2a5d20b9c64259a46587204d406938db9ce537211571de5464b6f26b4"
+  },
+  "versions": {
+   "python": "3.12.12",
+   "numpy": "1.26.4",
+   "pandas": "2.2.2",
+   "scikit-learn": "1.7.1",
+   "lightgbm": "4.6.0",
+   "torch": "2.6.0"
+  }
+ }
+}
