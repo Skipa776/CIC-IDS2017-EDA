@@ -1,0 +1,2038 @@
+{
+ "fold": {
+  "name": "2018_new_tool_ddos",
+  "question": "same family, new tool",
+  "train_days": [
+   "2018-02-14",
+   "2018-02-15",
+   "2018-02-16",
+   "2018-02-20"
+  ],
+  "val_days": [
+   "holdout"
+  ],
+  "test_days": [
+   "2018-02-21"
+  ],
+  "train_year": "2018",
+  "test_year": "2018",
+  "anomaly_only": false
+ },
+ "features": [
+  "Destination Port",
+  "Flow Duration",
+  "Total Fwd Packets",
+  "Total Backward Packets",
+  "Total Length of Fwd Packets",
+  "Total Length of Bwd Packets",
+  "Fwd Packet Length Max",
+  "Fwd Packet Length Min",
+  "Fwd Packet Length Mean",
+  "Fwd Packet Length Std",
+  "Bwd Packet Length Max",
+  "Bwd Packet Length Min",
+  "Bwd Packet Length Mean",
+  "Bwd Packet Length Std",
+  "Flow Bytes/s",
+  "Flow Packets/s",
+  "Flow IAT Mean",
+  "Flow IAT Std",
+  "Flow IAT Max",
+  "Flow IAT Min",
+  "Fwd IAT Total",
+  "Fwd IAT Mean",
+  "Fwd IAT Std",
+  "Fwd IAT Max",
+  "Fwd IAT Min",
+  "Bwd IAT Total",
+  "Bwd IAT Mean",
+  "Bwd IAT Std",
+  "Bwd IAT Max",
+  "Bwd IAT Min",
+  "Fwd PSH Flags",
+  "Fwd URG Flags",
+  "Fwd Header Length",
+  "Bwd Header Length",
+  "Fwd Packets/s",
+  "Bwd Packets/s",
+  "Min Packet Length",
+  "Max Packet Length",
+  "Packet Length Mean",
+  "Packet Length Std",
+  "Packet Length Variance",
+  "FIN Flag Count",
+  "SYN Flag Count",
+  "RST Flag Count",
+  "PSH Flag Count",
+  "ACK Flag Count",
+  "URG Flag Count",
+  "CWE Flag Count",
+  "ECE Flag Count",
+  "Down/Up Ratio",
+  "Average Packet Size",
+  "Avg Fwd Segment Size",
+  "Avg Bwd Segment Size",
+  "Subflow Fwd Packets",
+  "Subflow Fwd Bytes",
+  "Subflow Bwd Packets",
+  "Subflow Bwd Bytes",
+  "Init_Win_bytes_forward",
+  "Init_Win_bytes_backward",
+  "act_data_pkt_fwd",
+  "min_seg_size_forward",
+  "Active Mean",
+  "Active Std",
+  "Active Max",
+  "Active Min",
+  "Idle Mean",
+  "Idle Std",
+  "Idle Max",
+  "Idle Min",
+  "Has_Init_Win_fwd",
+  "Has_Init_Win_bwd"
+ ],
+ "budgets": [
+  0.001,
+  0.01,
+  0.05
+ ],
+ "primary_budget": 0.01,
+ "provenance": {
+  "git_commit": "47d1d417c1f9b5e4e982c4b467176ceecbb0a45f",
+  "git_dirty": false,
+  "data_sha256": {
+   "data/processed/cicids2018_eval.parquet": "b672cec2a5d20b9c64259a46587204d406938db9ce537211571de5464b6f26b4"
+  },
+  "versions": {
+   "python": "3.12.12",
+   "numpy": "1.26.4",
+   "pandas": "2.2.2",
+   "scikit-learn": "1.7.1",
+   "lightgbm": "4.6.0",
+   "torch": "2.6.0"
+  }
+ },
+ "complete": true,
+ "runs": [
+  {
+   "seed": 42,
+   "sizes": {
+    "train": 2042158,
+    "validation": 510540,
+    "test": 724037,
+    "validation_attacks": 322287
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "DDoS"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 1.0,
+      "0.75": 1.0,
+      "0.5": 1.0,
+      "0.25": 1.0,
+      "0.0": 0.19784850149090719
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9997952135829246,
+      "0.75": 0.9997859051094211,
+      "0.5": 0.999761082513412,
+      "0.25": 0.982298386220977,
+      "0.0": 0.19784850149090719
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.46495647814626284,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 0.0,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0009643201542912247,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 3.3311379547955062,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0022868163658906187,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 7.8995557213722005,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.44158045877806534,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0034991045598567294,
+       "recall": 0.002515478188041446,
+       "precision": 0.5766666666666667,
+       "alerts_per_10k_flows": 28.55261104110434,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.005400192864030858,
+       "recall": 0.002515478188041446,
+       "precision": 0.46883468834688347,
+       "alerts_per_10k_flows": 35.11971158055834,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.9998071359691417,
+       "recall": 0.002515478188041446,
+       "precision": 0.0047447958092208115,
+       "alerts_per_10k_flows": 3470.1891705656844,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.8566602441031843,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00016531202644992423,
+       "recall": 0.002515478188041446,
+       "precision": 0.9664804469273743,
+       "alerts_per_10k_flows": 17.036391254525586,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.2658293371642273,
+       "precision": 0.9995626072978973,
+       "alerts_per_10k_flows": 1740.7765548800219,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.2658293371642273,
+         "wilson_95": [
+          0.2647865444766618,
+          0.26687474590546817
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0003030720484915278,
+       "recall": 0.6034210503357363,
+       "precision": 0.9997350087206222,
+       "alerts_per_10k_flows": 3950.8057546835803,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.6034210503357363,
+         "wilson_95": [
+          0.6022643146274992,
+          0.6045766306685921
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.9993939319229498,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002867354327640307,
+       "precision": 0.9657198824681684,
+       "alerts_per_10k_flows": 19.434810581978354,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002867354327640307,
+         "wilson_95": [
+          0.0027437262613507454,
+          0.0029965361454935917
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.8280590686623763,
+       "precision": 0.999877098326606,
+       "alerts_per_10k_flows": 5420.817899060809,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.8280590686623763,
+         "wilson_95": [
+          0.8271654447581077,
+          0.8289490276321824
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.9829965306757475,
+       "precision": 0.9998964677763349,
+       "alerts_per_10k_flows": 6434.978090629795,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9829965306757475,
+         "wilson_95": [
+          0.9826882676422319,
+          0.9832993978802809
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00016531202644992423,
+       "recall": 0.002515478188041446,
+       "precision": 0.9664804469273743,
+       "alerts_per_10k_flows": 17.036391254525586,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.2658293371642273,
+       "precision": 0.9995626072978973,
+       "alerts_per_10k_flows": 1740.7765548800219,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.2658293371642273,
+         "wilson_95": [
+          0.2647865444766618,
+          0.26687474590546817
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0003030720484915278,
+       "recall": 0.6034210503357363,
+       "precision": 0.9997350087206222,
+       "alerts_per_10k_flows": 3950.8057546835803,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.6034210503357363,
+         "wilson_95": [
+          0.6022643146274992,
+          0.6045766306685921
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002867354327640307,
+       "precision": 0.9657198824681684,
+       "alerts_per_10k_flows": 19.434810581978354,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002867354327640307,
+         "wilson_95": [
+          0.0027437262613507454,
+          0.0029965361454935917
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.8280590686623763,
+       "precision": 0.999877098326606,
+       "alerts_per_10k_flows": 5420.817899060809,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.8280590686623763,
+         "wilson_95": [
+          0.8271654447581077,
+          0.8289490276321824
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.9829965306757475,
+       "precision": 0.9998964677763349,
+       "alerts_per_10k_flows": 6434.978090629795,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9829965306757475,
+         "wilson_95": [
+          0.9826882676422319,
+          0.9832993978802809
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 1,
+    "exact_twin_test_fraction": 1.3811448862420015e-06,
+    "exact_twin_attack_rows": 0,
+    "shuffled_label_ap": 0.7189338545775226,
+    "best_single_feature_index": 6,
+    "best_single_feature_ap": 0.9988750348750057
+   },
+   "seconds": 69.7
+  },
+  {
+   "seed": 43,
+   "sizes": {
+    "train": 2042158,
+    "validation": 510540,
+    "test": 724037,
+    "validation_attacks": 322287
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "DDoS"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 1.0,
+      "0.75": 1.0,
+      "0.5": 1.0,
+      "0.25": 1.0,
+      "0.0": 0.007480909872256716
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9997983164074257,
+      "0.75": 0.9997796994604188,
+      "0.5": 0.9997796994604188,
+      "0.25": 0.9821835817144347,
+      "0.0": 0.007480909872256716
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.4619612484494856,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 0.0,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0009643201542912247,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 3.3311379547955062,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0014602562336409974,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 5.044294617261766,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.44156482763688465,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.000936768149882904,
+       "recall": 0.002515478188041446,
+       "precision": 0.8357487922705314,
+       "alerts_per_10k_flows": 19.701301618361995,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.005345088855214217,
+       "recall": 0.002515478188041446,
+       "precision": 0.4713896457765668,
+       "alerts_per_10k_flows": 34.92936084028431,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.9994489599118336,
+       "recall": 0.002515478188041446,
+       "precision": 0.004746488147497805,
+       "alerts_per_10k_flows": 3468.951890753903,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.8664766297877788,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.2759232386563566,
+       "precision": 0.9996312567822413,
+       "alerts_per_10k_flows": 1806.7521214590004,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.2759232386563566,
+         "wilson_95": [
+          0.2748680892275545,
+          0.2769808913741189
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.004490976718556275,
+       "recall": 0.6191013490524063,
+       "precision": 0.9961863494707682,
+       "alerts_per_10k_flows": 4067.9095301001626,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.6191013490524063,
+         "wilson_95": [
+          0.6179529854467013,
+          0.6202483821091939
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.9993937319362501,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002862992226736189,
+       "precision": 0.9656694458067681,
+       "alerts_per_10k_flows": 19.406257970937247,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002862992226736189,
+         "wilson_95": [
+          0.0027394600480953094,
+          0.0029920782056723013
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.8213676058754591,
+       "precision": 0.9998760972035139,
+       "alerts_per_10k_flows": 5377.018193723755,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.8213676058754591,
+         "wilson_95": [
+          0.8204605122174774,
+          0.8222711093531153
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.9853098981885648,
+       "precision": 0.9998819569762689,
+       "alerts_per_10k_flows": 6450.21566738873,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9853098981885648,
+         "wilson_95": [
+          0.9850228324978905,
+          0.9855915422063126
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.2759232386563566,
+       "precision": 0.9996312567822413,
+       "alerts_per_10k_flows": 1806.7521214590004,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.2759232386563566,
+         "wilson_95": [
+          0.2748680892275545,
+          0.2769808913741189
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.004490976718556275,
+       "recall": 0.6191013490524063,
+       "precision": 0.9961863494707682,
+       "alerts_per_10k_flows": 4067.9095301001626,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.6191013490524063,
+         "wilson_95": [
+          0.6179529854467013,
+          0.6202483821091939
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002862992226736189,
+       "precision": 0.9656694458067681,
+       "alerts_per_10k_flows": 19.406257970937247,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002862992226736189,
+         "wilson_95": [
+          0.0027394600480953094,
+          0.0029920782056723013
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.8213676058754591,
+       "precision": 0.9998760972035139,
+       "alerts_per_10k_flows": 5377.018193723755,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.8213676058754591,
+         "wilson_95": [
+          0.8204605122174774,
+          0.8222711093531153
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.9853098981885648,
+       "precision": 0.9998819569762689,
+       "alerts_per_10k_flows": 6450.21566738873,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9853098981885648,
+         "wilson_95": [
+          0.9850228324978905,
+          0.9855915422063126
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 1,
+    "exact_twin_test_fraction": 1.3811448862420015e-06,
+    "exact_twin_attack_rows": 0,
+    "shuffled_label_ap": 0.6730053474843111,
+    "best_single_feature_index": 2,
+    "best_single_feature_ap": 0.9987599002428077
+   },
+   "seconds": 75.3
+  },
+  {
+   "seed": 44,
+   "sizes": {
+    "train": 2042158,
+    "validation": 510540,
+    "test": 724037,
+    "validation_attacks": 322287
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "DDoS"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 1.0,
+      "0.75": 1.0,
+      "0.5": 1.0,
+      "0.25": 1.0,
+      "0.0": 0.18311318793497722
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 0.75,
+     "validation_recall_by_share": {
+      "1.0": 0.9997455683909062,
+      "0.75": 0.9997517740399086,
+      "0.5": 0.9997269514438993,
+      "0.25": 0.983055475399256,
+      "0.0": 0.18311318793497722
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.4553192394727106,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 0.0,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0009643201542912247,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 3.3311379547955062,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0012949442071910732,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 4.47324239643968,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.44158258069546436,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.000936768149882904,
+       "recall": 0.002515478188041446,
+       "precision": 0.8357487922705314,
+       "alerts_per_10k_flows": 19.701301618361995,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.003168480506956881,
+       "recall": 0.002515478188041446,
+       "precision": 0.6006944444444444,
+       "alerts_per_10k_flows": 27.410506599460163,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.9998346879735501,
+       "recall": 0.002515478188041446,
+       "precision": 0.004744665679337392,
+       "alerts_per_10k_flows": 3470.2843459358214,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.913090395987812,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00024796803967488636,
+       "recall": 0.34119771658558007,
+       "precision": 0.9996166068857403,
+       "alerts_per_10k_flows": 2234.2037438183597,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.34119771658558007,
+         "wilson_95": [
+          0.3400780753279972,
+          0.34231913191380076
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0019286403085824494,
+       "recall": 0.5755123287511886,
+       "precision": 0.9982345701430503,
+       "alerts_per_10k_flows": 3773.741496080678,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.5755123287511886,
+         "wilson_95": [
+          0.5743437479282268,
+          0.5766800659829731
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.9993936889440217,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002865900294005601,
+       "precision": 0.965703086722195,
+       "alerts_per_10k_flows": 19.425293044964654,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002865900294005601,
+         "wilson_95": [
+          0.0027423041820922164,
+          0.0029950501737265453
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.7630739434264593,
+       "precision": 0.9998666331344261,
+       "alerts_per_10k_flows": 4995.450617307451,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.7630739434264593,
+         "wilson_95": [
+          0.7620675521369634,
+          0.7640773957672914
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.9553829779190453,
+       "precision": 0.9998934756903917,
+       "alerts_per_10k_flows": 6254.23054520259,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9553829779190453,
+         "wilson_95": [
+          0.954892471098889,
+          0.9558683973969243
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00024796803967488636,
+       "recall": 0.34119771658558007,
+       "precision": 0.9996166068857403,
+       "alerts_per_10k_flows": 2234.2037438183597,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.34119771658558007,
+         "wilson_95": [
+          0.3400780753279972,
+          0.34231913191380076
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0019286403085824494,
+       "recall": 0.5755123287511886,
+       "precision": 0.9982345701430503,
+       "alerts_per_10k_flows": 3773.741496080678,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.5755123287511886,
+         "wilson_95": [
+          0.5743437479282268,
+          0.5766800659829731
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00024796803967488636,
+       "recall": 0.0028775325630832492,
+       "precision": 0.9565007249879168,
+       "alerts_per_10k_flows": 19.691784081348292,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0028775325630832492,
+         "wilson_95": [
+          0.002753681044438006,
+          0.0030069377195853573
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0012122881939661111,
+       "recall": 0.5775407056716036,
+       "precision": 0.9988934686989959,
+       "alerts_per_10k_flows": 3784.5439005912294,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.5775407056716036,
+         "wilson_95": [
+          0.5763728559877299,
+          0.5787076891041476
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.004518528722964595,
+       "recall": 0.9057466317310852,
+       "precision": 0.9973741514025874,
+       "alerts_per_10k_flows": 5944.272917277375,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9057466317310852,
+         "wilson_95": [
+          0.9050538135724708,
+          0.9064349170632797
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 1,
+    "exact_twin_test_fraction": 1.3811448862420015e-06,
+    "exact_twin_attack_rows": 0,
+    "shuffled_label_ap": 0.6321739397889607,
+    "best_single_feature_index": 6,
+    "best_single_feature_ap": 0.9987965126497034
+   },
+   "seconds": 66.0
+  },
+  {
+   "seed": 45,
+   "sizes": {
+    "train": 2042158,
+    "validation": 510540,
+    "test": 724037,
+    "validation_attacks": 322287
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "DDoS"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 1.0,
+      "0.75": 1.0,
+      "0.5": 1.0,
+      "0.25": 1.0,
+      "0.0": 0.013612091086516056
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 0.75,
+     "validation_recall_by_share": {
+      "1.0": 0.9997765966359177,
+      "0.75": 0.9997796994604188,
+      "0.5": 0.9997672881624142,
+      "0.25": 0.982602463022089,
+      "0.0": 0.013612091086516056
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.45420825505123913,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 0.0,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0009643201542912247,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 3.3311379547955062,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0011847361895577903,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 4.092540915891622,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.4415916211916115,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.001487808238049318,
+       "recall": 0.002515478188041446,
+       "precision": 0.762114537444934,
+       "alerts_per_10k_flows": 21.604809021102284,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.005372640859622538,
+       "recall": 0.002515478188041446,
+       "precision": 0.4701086956521739,
+       "alerts_per_10k_flows": 35.024536210421324,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.9998346879735501,
+       "recall": 0.002515478188041446,
+       "precision": 0.004744665679337392,
+       "alerts_per_10k_flows": 3470.2843459358214,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.9426976318748763,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.24772225631123299,
+       "precision": 0.9995892958771173,
+       "alerts_per_10k_flows": 1622.1594910782608,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.24772225631123299,
+         "wilson_95": [
+          0.24670339782410197,
+          0.24874393313653934
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0007163521146163383,
+       "recall": 0.6004024765100866,
+       "precision": 0.9993707373506107,
+       "alerts_per_10k_flows": 3932.474978395191,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.6004024765100866,
+         "wilson_95": [
+          0.5992442723711268,
+          0.6015595589958703
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.9993935227970906,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002868808361275013,
+       "precision": 0.9657366617719041,
+       "alerts_per_10k_flows": 19.444328118992054,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002868808361275013,
+         "wilson_95": [
+          0.0027451483487743963,
+          0.0029980221090955155
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.8215580842816056,
+       "precision": 0.9998761259268435,
+       "alerts_per_10k_flows": 5378.26499107255,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.8215580842816056,
+         "wilson_95": [
+          0.8206513674424243,
+          0.8224612088125187
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.9836828345513289,
+       "precision": 0.999881761749926,
+       "alerts_per_10k_flows": 6439.565543470398,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9836828345513289,
+         "wilson_95": [
+          0.9833806929039055,
+          0.983979572702679
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.24772225631123299,
+       "precision": 0.9995892958771173,
+       "alerts_per_10k_flows": 1622.1594910782608,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.24772225631123299,
+         "wilson_95": [
+          0.24670339782410197,
+          0.24874393313653934
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0007163521146163383,
+       "recall": 0.6004024765100866,
+       "precision": 0.9993707373506107,
+       "alerts_per_10k_flows": 3932.474978395191,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.6004024765100866,
+         "wilson_95": [
+          0.5992442723711268,
+          0.6015595589958703
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0011296321807411488,
+       "recall": 0.0028775325630832492,
+       "precision": 0.8283800753453328,
+       "alerts_per_10k_flows": 22.737395925732756,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0028775325630832492,
+         "wilson_95": [
+          0.002753681044438006,
+          0.0030069377195853573
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.002507232401157184,
+       "recall": 0.7674389523978469,
+       "precision": 0.9982788296041308,
+       "alerts_per_10k_flows": 5032.0169945140915,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.7674389523978469,
+         "wilson_95": [
+          0.7664389932382046,
+          0.7684359238448272
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.005593056894889103,
+       "recall": 0.974323220044726,
+       "precision": 0.9969796745487738,
+       "alerts_per_10k_flows": 6396.860354889921,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.974323220044726,
+         "wilson_95": [
+          0.9739467400198956,
+          0.9746944011350609
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 1,
+    "exact_twin_test_fraction": 1.3811448862420015e-06,
+    "exact_twin_attack_rows": 0,
+    "shuffled_label_ap": 0.6320594361986478,
+    "best_single_feature_index": 6,
+    "best_single_feature_ap": 0.9989578485050905
+   },
+   "seconds": 72.5
+  },
+  {
+   "seed": 46,
+   "sizes": {
+    "train": 2042158,
+    "validation": 510540,
+    "test": 724037,
+    "validation_attacks": 322287
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "DDoS"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 1.0,
+      "0.75": 1.0,
+      "0.5": 1.0,
+      "0.25": 1.0,
+      "0.0": 0.220176426601135
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 0.75,
+     "validation_recall_by_share": {
+      "1.0": 0.9998417559504417,
+      "0.75": 0.9998448587749428,
+      "0.5": 0.9998448587749428,
+      "0.25": 0.9823325172904895,
+      "0.0": 0.220176426601135
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.4539007566680839,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 0.0,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0009643201542912247,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 3.3311379547955062,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0015980162556826008,
+       "recall": 0.0,
+       "precision": 0.0,
+       "alerts_per_10k_flows": 5.520171467946838,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0,
+         "wilson_95": [
+          0.0,
+          5.585784409924957e-06
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.44158365506921093,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0013224962115993939,
+       "recall": 0.002515478188041446,
+       "precision": 0.7828054298642534,
+       "alerts_per_10k_flows": 21.033756800280198,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.005593056894889103,
+       "recall": 0.002515478188041446,
+       "precision": 0.4601063829787234,
+       "alerts_per_10k_flows": 35.78593917151744,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.9998071359691417,
+       "recall": 0.002515478188041446,
+       "precision": 0.0047447958092208115,
+       "alerts_per_10k_flows": 3470.1891705656844,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.8460753916272445,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.4316604191688162,
+       "precision": 0.9997305952833969,
+       "alerts_per_10k_flows": 2826.242133755658,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.4316604191688162,
+         "wilson_95": [
+          0.4304901775741157,
+          0.432831424223847
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0003857280617164899,
+       "recall": 0.5754614375739739,
+       "precision": 0.9996463833860811,
+       "alerts_per_10k_flows": 3768.0785615575255,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.5754614375739739,
+         "wilson_95": [
+          0.5742928386660747,
+          0.5766291934592301
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": 0.9993937178558062,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.002867354327640307,
+       "precision": 0.9657198824681684,
+       "alerts_per_10k_flows": 19.434810581978354,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002867354327640307,
+         "wilson_95": [
+          0.0027437262613507454,
+          0.0029965361454935917
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00019286403085824494,
+       "recall": 0.8338272200912552,
+       "precision": 0.9998779484175141,
+       "alerts_per_10k_flows": 5458.573968394163,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.8338272200912552,
+         "wilson_95": [
+          0.8329456018357448,
+          0.8347051089730024
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.9901401979230584,
+       "precision": 0.9998825327696864,
+       "alerts_per_10k_flows": 6481.832925348246,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9901401979230584,
+         "wilson_95": [
+          0.9899039238162262,
+          0.9903709963949381
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00013776002204160352,
+       "recall": 0.002515478188041446,
+       "precision": 0.9719101123595506,
+       "alerts_per_10k_flows": 16.941215884388573,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.002515478188041446,
+         "wilson_95": [
+          0.0023998370309097194,
+          0.0026366770277454045
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.00022041603526656565,
+       "recall": 0.4316604191688162,
+       "precision": 0.9997305952833969,
+       "alerts_per_10k_flows": 2826.242133755658,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.4316604191688162,
+         "wilson_95": [
+          0.4304901775741157,
+          0.432831424223847
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0003857280617164899,
+       "recall": 0.5754614375739739,
+       "precision": 0.9996463833860811,
+       "alerts_per_10k_flows": 3768.0785615575255,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.5754614375739739,
+         "wilson_95": [
+          0.5742928386660747,
+          0.5766291934592301
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 724037,
+     "n_attack": 687742,
+     "prevalence": 0.654560994087706,
+     "average_precision": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00024796803967488636,
+       "recall": 0.0028789865967179555,
+       "precision": 0.9565217391304348,
+       "alerts_per_10k_flows": 19.701301618361995,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.0028789865967179555,
+         "wilson_95": [
+          0.0027551031888447437,
+          0.003008423626204196
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.0017082242733158838,
+       "recall": 0.7694309784773942,
+       "precision": 0.9988297249853716,
+       "alerts_per_10k_flows": 5042.2959344888895,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.7694309784773942,
+         "wilson_95": [
+          0.7684340041432193,
+          0.7704249428448507
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.0057583689213390275,
+       "recall": 0.9778710621134088,
+       "precision": 0.9969019274754563,
+       "alerts_per_10k_flows": 6420.654197424174,
+       "per_family": {
+        "DDoS": {
+         "n": 687742,
+         "recall": 0.9778710621134088,
+         "wilson_95": [
+          0.977520715824592,
+          0.9782160698327682
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 1,
+    "exact_twin_test_fraction": 1.3811448862420015e-06,
+    "exact_twin_attack_rows": 0,
+    "shuffled_label_ap": 0.6438316963352174,
+    "best_single_feature_index": 8,
+    "best_single_feature_ap": 0.998789047677901
+   },
+   "seconds": 62.4
+  }
+ ]
+}
