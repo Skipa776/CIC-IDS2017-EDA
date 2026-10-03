@@ -13,7 +13,7 @@ Global label-blind behavior groups are assigned to train/validation/test (60/20/
 
 A separate purged block test takes the tail of every raw CSV, reserves intervening gaps, and removes test/validation profiles from earlier partitions. CSV order is not verified time order. Quarter-octave and eighth-octave profile splits assess grouping sensitivity; no rule is selected by test score.
 
-Whole-day Friday, Wed+Thu and forward-Thursday tests are rerun on this raw-derived population with global profile purging as well. These test capture/attack-family shift; Wed+Thu remains explicitly nonchronological.
+Whole-day Friday, Wed+Thu and forward-Thursday tests are rerun on this raw-derived population. The day boundary is their separation unit: profiles are NOT purged across days, because similar behaviour on other days is what a transfer test measures. Profile overlap is still reported. Wed+Thu remains explicitly nonchronological.
 
 Scalers and models fit on training only. Thresholds use validation benign flows only. Only training benign flows are capped. The original 20-feature model is a diagnostic; the 71-feature model is the primary baseline. All captures have already been explored, so these remain development evaluations.
 
@@ -27,36 +27,36 @@ Scalers and models fit on training only. Thresholds use validation benign flows 
 | grouped_eighth_octave | 42 | lgbm20 | 0.9992 | 0.2275 | 0.0090 | 0.9997 |
 | purged_file_blocks | 42 | lgbm71 | 0.9908 | 0.0704 | 0.0103 | 0.9760 |
 | purged_file_blocks | 42 | lgbm20 | 0.9869 | 0.0704 | 0.0099 | 0.9550 |
-| test_friday | 42 | lgbm71 | 0.6322 | 0.4110 | 0.0199 | 0.2126 |
-| test_friday | 42 | lgbm20 | 0.6035 | 0.4110 | 0.0138 | 0.1282 |
-| test_wed_thu | 42 | lgbm71 | 0.3445 | 0.2208 | 0.0061 | 0.0001 |
-| test_wed_thu | 42 | lgbm20 | 0.4800 | 0.2208 | 0.0097 | 0.0000 |
-| forward_thursday | 42 | lgbm71 | 0.0046 | 0.0048 | 0.0104 | 0.0063 |
-| forward_thursday | 42 | lgbm20 | 0.0049 | 0.0048 | 0.0115 | 0.0036 |
+| test_friday | 42 | lgbm71 | 0.7715 | 0.4110 | 0.0125 | 0.4386 |
+| test_friday | 42 | lgbm20 | 0.7694 | 0.4110 | 0.0090 | 0.2964 |
+| test_wed_thu | 42 | lgbm71 | 0.5438 | 0.2208 | 0.0085 | 0.0132 |
+| test_wed_thu | 42 | lgbm20 | 0.5267 | 0.2208 | 0.0117 | 0.0094 |
+| forward_thursday | 42 | lgbm71 | 0.7622 | 0.0048 | 0.0146 | 0.8615 |
+| forward_thursday | 42 | lgbm20 | 0.1976 | 0.0048 | 0.0124 | 0.8204 |
 | grouped_quarter_octave | 43 | lgbm71 | 0.9996 | 0.2053 | 0.0119 | 0.9999 |
 | grouped_quarter_octave | 43 | lgbm20 | 0.9994 | 0.2053 | 0.0043 | 0.9996 |
 | grouped_eighth_octave | 43 | lgbm71 | 0.9995 | 0.1848 | 0.0089 | 0.9999 |
 | grouped_eighth_octave | 43 | lgbm20 | 0.9991 | 0.1848 | 0.0132 | 0.9997 |
 | purged_file_blocks | 43 | lgbm71 | 0.9908 | 0.0704 | 0.0093 | 0.9846 |
 | purged_file_blocks | 43 | lgbm20 | 0.9905 | 0.0704 | 0.0104 | 0.9661 |
-| test_friday | 43 | lgbm71 | 0.6796 | 0.4110 | 0.0228 | 0.4322 |
-| test_friday | 43 | lgbm20 | 0.6190 | 0.4110 | 0.0203 | 0.1267 |
-| test_wed_thu | 43 | lgbm71 | 0.2215 | 0.2208 | 0.0072 | 0.0000 |
-| test_wed_thu | 43 | lgbm20 | 0.2902 | 0.2208 | 0.0099 | 0.0000 |
-| forward_thursday | 43 | lgbm71 | 0.0051 | 0.0048 | 0.0115 | 0.0063 |
-| forward_thursday | 43 | lgbm20 | 0.0049 | 0.0048 | 0.0138 | 0.0050 |
+| test_friday | 43 | lgbm71 | 0.7707 | 0.4110 | 0.0122 | 0.2162 |
+| test_friday | 43 | lgbm20 | 0.6131 | 0.4110 | 0.0102 | 0.0776 |
+| test_wed_thu | 43 | lgbm71 | 0.2186 | 0.2208 | 0.0120 | 0.0099 |
+| test_wed_thu | 43 | lgbm20 | 0.3044 | 0.2208 | 0.0113 | 0.0099 |
+| forward_thursday | 43 | lgbm71 | 0.6507 | 0.0048 | 0.0119 | 0.8172 |
+| forward_thursday | 43 | lgbm20 | 0.1929 | 0.0048 | 0.0128 | 0.8204 |
 | grouped_quarter_octave | 44 | lgbm71 | 0.9997 | 0.1889 | 0.0128 | 0.9999 |
 | grouped_quarter_octave | 44 | lgbm20 | 0.9995 | 0.1889 | 0.0115 | 0.9998 |
 | grouped_eighth_octave | 44 | lgbm71 | 0.9997 | 0.1838 | 0.0083 | 0.9999 |
 | grouped_eighth_octave | 44 | lgbm20 | 0.9994 | 0.1838 | 0.0092 | 0.9999 |
 | purged_file_blocks | 44 | lgbm71 | 0.9930 | 0.0704 | 0.0117 | 0.9869 |
 | purged_file_blocks | 44 | lgbm20 | 0.9880 | 0.0704 | 0.0101 | 0.9653 |
-| test_friday | 44 | lgbm71 | 0.6558 | 0.4110 | 0.0232 | 0.4589 |
-| test_friday | 44 | lgbm20 | 0.6193 | 0.4110 | 0.0134 | 0.1334 |
-| test_wed_thu | 44 | lgbm71 | 0.3997 | 0.2208 | 0.0067 | 0.0000 |
-| test_wed_thu | 44 | lgbm20 | 0.3744 | 0.2208 | 0.0092 | 0.0000 |
-| forward_thursday | 44 | lgbm71 | 0.0049 | 0.0048 | 0.0111 | 0.0041 |
-| forward_thursday | 44 | lgbm20 | 0.0047 | 0.0048 | 0.0127 | 0.0000 |
+| test_friday | 44 | lgbm71 | 0.7883 | 0.4110 | 0.0131 | 0.3373 |
+| test_friday | 44 | lgbm20 | 0.6859 | 0.4110 | 0.0100 | 0.0125 |
+| test_wed_thu | 44 | lgbm71 | 0.2268 | 0.2208 | 0.0071 | 0.0096 |
+| test_wed_thu | 44 | lgbm20 | 0.5944 | 0.2208 | 0.0118 | 0.0093 |
+| forward_thursday | 44 | lgbm71 | 0.6684 | 0.0048 | 0.0082 | 0.8168 |
+| forward_thursday | 44 | lgbm20 | 0.2314 | 0.0048 | 0.0121 | 0.8204 |
 
 ## Remaining limits
 

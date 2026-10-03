@@ -27,10 +27,12 @@ from scripts.train_models import DATA_PATH_V2, downsample_benign, random_split
 from src.data.cleaning import RAW_DIR, clean
 from src.data.loader import get_feature_columns, prepare_binary_labels
 from src.features.engineering import FAST_FEATURES
-from src.models.leakage import behavior_groups, grouped_partitions, overlap_report, purge_profiles, purged_file_blocks
+from src.models.leakage import behavior_groups, grouped_partitions, overlap_report, purged_file_blocks
 
 PROTOCOLS = ["grouped_quarter_octave", "grouped_eighth_octave", "purged_file_blocks",
              "test_friday", "test_wed_thu", "forward_thursday"]
+# Protocols that hold out flows from the same capture; profile grouping applies only here
+WITHIN_CAPTURE = PROTOCOLS[:3]
 
 
 def file_hash(path):
@@ -106,9 +108,10 @@ def write_summary(result, path):
              "A separate purged block test takes the tail of every raw CSV, reserves intervening gaps, and removes "
              "test/validation profiles from earlier partitions. CSV order is not verified time order. "
              "Quarter-octave and eighth-octave profile splits assess grouping sensitivity; no rule is selected by test score.", "",
-             "Whole-day Friday, Wed+Thu and forward-Thursday tests are rerun on this raw-derived population "
-             "with global profile purging as well. These test capture/attack-family shift; "
-             "Wed+Thu remains explicitly nonchronological.", "",
+             "Whole-day Friday, Wed+Thu and forward-Thursday tests are rerun on this raw-derived population. "
+             "The day boundary is their separation unit: profiles are NOT purged across days, because "
+             "similar behaviour on other days is what a transfer test measures. Profile overlap is still "
+             "reported. Wed+Thu remains explicitly nonchronological.", "",
              "Scalers and models fit on training only. Thresholds use validation benign flows only. "
              "Only training benign flows are capped. The original 20-feature model is a diagnostic; "
              "the 71-feature model is the primary baseline. All captures have already been explored, "
@@ -187,15 +190,19 @@ def main():
                 elif name.startswith("grouped_"):
                     raw_train, val, test = grouped_partitions(groups, seed)
                 else:
-                    raw_train, val, test = purge_profiles(*make_partitions(days, y, name, seed), groups)
+                    # Whole-day tests: the day boundary is the separation unit. Purging
+                    # profiles across days would delete similar behaviour from other days,
+                    # which is exactly what a transfer test measures.
+                    raw_train, val, test = make_partitions(days, y, name, seed)
                 train = downsample_benign(raw_train, y, seed=seed)
                 if any(len(np.unique(y[idx])) != 2 for idx in [train, val, test]):
                     raise ValueError(f"{name}: insufficient class coverage for evaluation")
-                if name in PROTOCOLS[:3] and (set(sources[test]) != set(sources) or set(sources[val]) != set(sources)):
+                if name in WITHIN_CAPTURE and (set(sources[test]) != set(sources) or set(sources[val]) != set(sources)):
                     raise ValueError(f"{name}: validation and test must represent every source file")
-                for left, right in [(train, val), (train, test), (val, test)]:
-                    if np.isin(groups[left], groups[right]).any():
-                        raise AssertionError("Related profile crossed a partition boundary")
+                if name in WITHIN_CAPTURE:
+                    for left, right in [(train, val), (train, test), (val, test)]:
+                        if np.isin(groups[left], groups[right]).any():
+                            raise AssertionError("Related profile crossed a partition boundary")
                 run = {"protocol": name, "seed": seed, "bin_width": width,
                        "partition_counts_before_training_cap": {"train": len(raw_train), "validation": len(val), "test": len(test),
                                                                 "excluded": len(df) - len(raw_train) - len(val) - len(test)},
