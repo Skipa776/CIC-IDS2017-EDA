@@ -66,9 +66,13 @@ def hybrid_alerts(val_scores, test_scores, val_benign, sup, anom, share):
     """OR rule: supervised gets `share` of each budget, the anomaly model the rest."""
     out = {}
     for b in BUDGETS:
-        t_sup = threshold_on_benign(val_scores[sup][val_benign], b * share)
-        t_anom = threshold_on_benign(val_scores[anom][val_benign], b * (1 - share))
-        out[str(b)] = (test_scores[sup] >= t_sup) | (test_scores[anom] >= t_anom)
+        # A zero share means that model never alerts. (A threshold "above every validation
+        # benign score" would still fire on test flows more extreme than validation.)
+        none = np.zeros(len(test_scores[sup]), dtype=bool)
+        sup_alerts = test_scores[sup] >= threshold_on_benign(val_scores[sup][val_benign], b * share) if share > 0 else none
+        anom_alerts = (test_scores[anom] >= threshold_on_benign(val_scores[anom][val_benign], b * (1 - share))
+                       if share < 1 else none)
+        out[str(b)] = sup_alerts | anom_alerts
     return out
 
 
