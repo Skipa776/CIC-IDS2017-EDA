@@ -27,7 +27,8 @@ def train_layer1_binary(
     X_train: np.ndarray,
     y_train: np.ndarray,
     use_lightgbm: bool = True,
-    random_state: int = 42
+    random_state: int = 42,
+    n_jobs: int = -1,
 ) -> Any:
     """
     Train Layer 1 binary classifier (benign vs attack).
@@ -39,6 +40,7 @@ def train_layer1_binary(
         y_train: Binary labels (0=benign, 1=attack)
         use_lightgbm: Use LightGBM if available (faster inference)
         random_state: Random seed
+        n_jobs: Worker threads for training
 
     Returns:
         Trained classifier
@@ -52,7 +54,7 @@ def train_layer1_binary(
             learning_rate=0.1,
             n_estimators=100,
             class_weight='balanced',
-            n_jobs=-1,
+            n_jobs=n_jobs,
             random_state=random_state,
             verbose=-1,
         )
@@ -62,7 +64,7 @@ def train_layer1_binary(
             class_weight='balanced',
             max_iter=1000,
             random_state=random_state,
-            n_jobs=-1,
+            n_jobs=n_jobs,
         )
 
     model.fit(X_train, y_train)

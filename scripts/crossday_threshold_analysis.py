@@ -2,6 +2,10 @@
 """
 Cross-day threshold analysis for Layer 1.
 
+RETROSPECTIVE diagnostic: thresholds are chosen using test labels. These
+results describe the held-out ROC curve, not a deployable frozen threshold.
+Use evaluate_generalization.py for validation-frozen threshold evaluation.
+
 The default 0.5 threshold catches only a few percent of attack flows on
 held-out days. This script asks what recall is available at fixed false
 positive rates, using the same splits and Layer 1 training as
@@ -69,6 +73,8 @@ def evaluate_split(X, y, labels, tr, te):
     }
 
     result = {
+        "metric_definition": "average_precision_score (non-interpolated AP)",
+        "threshold_source": "outer test labels; retrospective diagnostic only",
         "n_test": int(len(te)),
         "pr_auc": float(average_precision_score(y_te, scores)),
         "no_skill_pr_auc": float(y_te.mean()),

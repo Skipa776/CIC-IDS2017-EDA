@@ -68,6 +68,24 @@ def threshold_at_fpr(y_true, scores, target_fpr):
     return float(thresholds[i]), float(fpr[i]), float(tpr[i])
 
 
+def threshold_on_benign(scores, target_fpr):
+    """Choose a >= threshold on validation benign scores only, respecting ties.
+
+    The empirical validation FPR is bounded; the FPR on future traffic is not.
+    No attack scores or outer-test labels are needed to choose this threshold.
+    """
+    scores = np.asarray(scores, dtype=float)
+    if scores.ndim != 1 or not len(scores) or not np.isfinite(scores).all():
+        raise ValueError("Expected a nonempty vector of finite benign scores")
+    if not 0 <= target_fpr < 1:
+        raise ValueError("target_fpr must be in [0, 1)")
+    allowed = int(np.floor(target_fpr * len(scores)))
+    # Exclude the first score that cannot fit within the budget. nextafter
+    # excludes all ties at that boundary for the >= decision rule.
+    boundary = np.partition(scores, len(scores) - allowed - 1)[len(scores) - allowed - 1]
+    return float(np.nextafter(boundary, np.inf))
+
+
 def evaluate_multiclass_model(
     model: Any,
     X_test: np.ndarray,
