@@ -79,7 +79,8 @@ different random seeds gave recall between 0.227 and 0.545 with 200 trees, and b
 numbers at low alert budgets, including the ones in `notebooks/single_day_eda.ipynb`, should be
 read with that spread in mind.
 
-**3. Nothing transfers to 2018, including attack types the models were trained on.** Logistic
+**3. These detectors do not transfer to 2018, including on attack types they were trained on.**
+(A later check found one that partly does: a LightGBM on all 71 features, see the follow-up below.) Logistic
 regression caught 2017's SSH brute force (same-day recall 0.996 in `single_day_eda.ipynb`), but
 2018's SSH-Bruteforce at 0.000. Isolation Forest scored at no-skill (PR-AUC 0.102 vs. 0.103). The same attacks look
 different on the new network (medians computed from the two cleaned parquets):
@@ -94,6 +95,25 @@ different on the new network (medians computed from the two cleaned parquets):
 2018's SSH brute-force flows are about 32 times shorter. Its DoS Hulk flows get no reply packets.
 Its benign traffic shifts from port 80 to 443. The models learned what attacks looked like on the
 2017 network, with the 2017 tools, not what an attack is.
+
+## Follow-up: why, and can it be fixed?
+
+Three notebooks dig into this:
+
+- `notebooks/cross_year_diagnostics.ipynb` finds three causes. (1) The flow tool measured
+  header-length features differently: single-packet DNS queries record a forward header length
+  of 8 bytes in every 2018 flow, but 20, 32 or 40 bytes in 2017. (2) The networks and attack tools
+  differ: a classifier can tell which year a benign flow came from with AUC 0.9998. (3) The class
+  mix differs. Units, column mapping and cleaning were ruled out.
+- `notebooks/train_2017_test_2018.ipynb`: a LightGBM on all 71 features transfers far better than
+  the 20-feature production model. It reaches PR-AUC 0.557 on 2018 (no-skill 0.103) and recall
+  0.380 at a 1% false positive rate. Dropping the tool- or network-dependent features made it
+  worse.
+- `notebooks/train_2018_test_2017.ipynb`: in the other direction the baseline is at chance, and
+  dropping the header features is what helps (LightGBM PR-AUC 0.174 to 0.562).
+
+The same fix helps in one direction and hurts in the other. Without labeled data from the new
+network there is no way to choose it in advance.
 
 ## Recommendation
 

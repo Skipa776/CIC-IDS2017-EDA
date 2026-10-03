@@ -1,0 +1,286 @@
+{
+  "summary": [
+    {
+      "variant": "baseline",
+      "model": "Logistic regression",
+      "test set": "2017 held-out",
+      "n features": 71,
+      "PR-AUC": 0.9543367706968262,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.7417802820877789
+    },
+    {
+      "variant": "baseline",
+      "model": "Logistic regression",
+      "test set": "2018 (other year)",
+      "n features": 71,
+      "PR-AUC": 0.2966075159057098,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.025905968669118245
+    },
+    {
+      "variant": "baseline",
+      "model": "LightGBM",
+      "test set": "2017 held-out",
+      "n features": 71,
+      "PR-AUC": 0.9998286387561925,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9999176557776236
+    },
+    {
+      "variant": "baseline",
+      "model": "LightGBM",
+      "test set": "2018 (other year)",
+      "n features": 71,
+      "PR-AUC": 0.5574569169321316,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.3800920866349395
+    },
+    {
+      "variant": "drop_header",
+      "model": "Logistic regression",
+      "test set": "2017 held-out",
+      "n features": 68,
+      "PR-AUC": 0.9442484847236927,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.6390146925619641
+    },
+    {
+      "variant": "drop_header",
+      "model": "Logistic regression",
+      "test set": "2018 (other year)",
+      "n features": 68,
+      "PR-AUC": 0.16674743002015344,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.008494467585549139
+    },
+    {
+      "variant": "drop_header",
+      "model": "LightGBM",
+      "test set": "2017 held-out",
+      "n features": 68,
+      "PR-AUC": 0.9998286900146891,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9999058923172841
+    },
+    {
+      "variant": "drop_header",
+      "model": "LightGBM",
+      "test set": "2018 (other year)",
+      "n features": 68,
+      "PR-AUC": 0.5035690060155142,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.2285345071936639
+    },
+    {
+      "variant": "drop_network",
+      "model": "Logistic regression",
+      "test set": "2017 held-out",
+      "n features": 68,
+      "PR-AUC": 0.9492499783506225,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.7771412438682963
+    },
+    {
+      "variant": "drop_network",
+      "model": "Logistic regression",
+      "test set": "2018 (other year)",
+      "n features": 68,
+      "PR-AUC": 0.20196932438142837,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.006339232641133667
+    },
+    {
+      "variant": "drop_network",
+      "model": "LightGBM",
+      "test set": "2017 held-out",
+      "n features": 68,
+      "PR-AUC": 0.999048493995498,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9966474138032444
+    },
+    {
+      "variant": "drop_network",
+      "model": "LightGBM",
+      "test set": "2018 (other year)",
+      "n features": 68,
+      "PR-AUC": 0.39983521485731166,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.0745873472755286
+    },
+    {
+      "variant": "per_domain",
+      "model": "Logistic regression",
+      "test set": "2017 held-out",
+      "n features": 71,
+      "PR-AUC": 0.987832525924651,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9813549153619029
+    },
+    {
+      "variant": "per_domain",
+      "model": "Logistic regression",
+      "test set": "2018 (other year)",
+      "n features": 71,
+      "PR-AUC": 0.3503528300544321,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.2639199386386682
+    },
+    {
+      "variant": "per_domain",
+      "model": "LightGBM",
+      "test set": "2017 held-out",
+      "n features": 71,
+      "PR-AUC": 0.9994347383459032,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9999411826983026
+    },
+    {
+      "variant": "per_domain",
+      "model": "LightGBM",
+      "test set": "2018 (other year)",
+      "n features": 71,
+      "PR-AUC": 0.3117650043509605,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.0020466176500127586
+    },
+    {
+      "variant": "header_and_domain",
+      "model": "Logistic regression",
+      "test set": "2017 held-out",
+      "n features": 68,
+      "PR-AUC": 0.9833175445098262,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9741556776341329
+    },
+    {
+      "variant": "header_and_domain",
+      "model": "Logistic regression",
+      "test set": "2018 (other year)",
+      "n features": 68,
+      "PR-AUC": 0.31051944771113654,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.1972914120173877
+    },
+    {
+      "variant": "header_and_domain",
+      "model": "LightGBM",
+      "test set": "2017 held-out",
+      "n features": 68,
+      "PR-AUC": 0.9998391732961892,
+      "no-skill": 0.16871786016953358,
+      "recall at 1% FPR": 0.9999294192379631
+    },
+    {
+      "variant": "header_and_domain",
+      "model": "LightGBM",
+      "test set": "2018 (other year)",
+      "n features": 68,
+      "PR-AUC": 0.31199652225349106,
+      "no-skill": 0.10304378680007933,
+      "recall at 1% FPR": 0.009178161377029228
+    }
+  ],
+  "per_family_other_year": {
+    "baseline | Logistic regression": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.0004145408163265306,
+      "DDoS": 0.011074095791637402,
+      "DoS": 0.06468385600032561,
+      "Heartbleed": NaN,
+      "Infiltration": 0.10194571368051562,
+      "PortScan": NaN,
+      "Web attack": 0.0
+    },
+    "baseline | LightGBM": {
+      "Bot": 0.0002698308368215311,
+      "Brute force (FTP/SSH)": 0.9719494047619047,
+      "DDoS": 0.32559877827966827,
+      "DoS": 0.7551690103583711,
+      "Heartbleed": NaN,
+      "Infiltration": 0.13546615426513753,
+      "PortScan": NaN,
+      "Web attack": 0.512280701754386
+    },
+    "drop_header | Logistic regression": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.0,
+      "DDoS": 0.011788054719668022,
+      "DoS": 0.006893709680701683,
+      "Heartbleed": NaN,
+      "Infiltration": 0.0069295246164553514,
+      "PortScan": NaN,
+      "Web attack": 0.0
+    },
+    "drop_header | LightGBM": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.8499787414965987,
+      "DDoS": 0.26185925730229204,
+      "DoS": 0.1217312114613647,
+      "Heartbleed": NaN,
+      "Infiltration": 0.0007262383877507792,
+      "PortScan": NaN,
+      "Web attack": 0.010526315789473684
+    },
+    "drop_network | Logistic regression": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.0,
+      "DDoS": 0.005295410171981623,
+      "DoS": 0.017669264738802173,
+      "Heartbleed": NaN,
+      "Infiltration": 0.007103519230187309,
+      "PortScan": NaN,
+      "Web attack": 0.0
+    },
+    "drop_network | LightGBM": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.0,
+      "DDoS": 0.10685284584801953,
+      "DoS": 0.08792913978713446,
+      "Heartbleed": NaN,
+      "Infiltration": 0.0004463340091384997,
+      "PortScan": NaN,
+      "Web attack": 0.0035087719298245615
+    },
+    "per_domain | Logistic regression": {
+      "Bot": 1.383747881136057e-05,
+      "Brute force (FTP/SSH)": 0.026179846938775512,
+      "DDoS": 0.32399043758980867,
+      "DoS": 0.41957508292802054,
+      "Heartbleed": NaN,
+      "Infiltration": 0.13930916573365207,
+      "PortScan": NaN,
+      "Web attack": 0.0011695906432748538
+    },
+    "per_domain | LightGBM": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.0,
+      "DDoS": 0.0,
+      "DoS": 0.007361769673782536,
+      "Heartbleed": NaN,
+      "Infiltration": 0.009652918570520773,
+      "PortScan": NaN,
+      "Web attack": 0.03274853801169591
+    },
+    "header_and_domain | Logistic regression": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.005548469387755102,
+      "DDoS": 0.32399043758980867,
+      "DoS": 0.057551028714463055,
+      "Heartbleed": NaN,
+      "Infiltration": 0.014804672133627864,
+      "PortScan": NaN,
+      "Web attack": 0.0
+    },
+    "header_and_domain | LightGBM": {
+      "Bot": 0.0,
+      "Brute force (FTP/SSH)": 0.0,
+      "DDoS": 0.0,
+      "DoS": 0.05710840676448442,
+      "Heartbleed": NaN,
+      "Infiltration": 0.008260961660665114,
+      "PortScan": NaN,
+      "Web attack": 0.023391812865497075
+    }
+  }
+}
