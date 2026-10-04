@@ -37,8 +37,11 @@ def name(det):
 
 
 def fmt(x):
-    """Never print 1.000: scores above 0.99 keep four decimals."""
-    return f"{x:.4f}" if x > 0.99 else f"{x:.3f}"
+    """Never round up to 1: above 0.99, truncate (not round) to 4 decimals, or 5 above 0.9999."""
+    if x <= 0.99:
+        return f"{x:.3f}"
+    digits = 5 if x > 0.9999 else 4
+    return f"{int(x * 10**digits) / 10**digits:.{digits}f}"
 
 
 def roc_table(summary):
@@ -101,9 +104,7 @@ def headline(summary):
             flags.append(f"{copies:.0%} of test attack flows are exact copies of training flows")
         r, fpr = v["budgets"]["0.01"]["recall"], v["budgets"]["0.01"]["fpr"]
         ap = v["average_precision"]
-        # never print 1.000: scores above 0.99 keep four decimals
-        ap_fmt = (f"{ap['median']:.4f}" if ap['median'] > 0.99 else f"{ap['median']:.3f}") if ap else "-"
-        ap_text = f"{ap_fmt} / {f['prevalence']:.3f}"
+        ap_text = f"{fmt(ap['median']) if ap else '-'} / {f['prevalence']:.3f}"
         auc = v.get("roc_auc")
         lines.append(f"| {label} | {fams} | {name(best)} | {r['median']:.1%} ({r['min']:.1%}-{r['max']:.1%}) "
                      f"| {fpr['min']:.2%}-{fpr['max']:.2%} | {ap_text} | {fmt(auc['median']) if auc else '-'} "
@@ -134,7 +135,9 @@ def main():
              + "\n\n**ROC AUC of every detector** (median, seed range; '-' = not trained on that test). "
                "ROC AUC ignores how rare attacks are, so it reads high even when a detector is useless at a "
                "1% alert budget; below 0.5 means attacks look more normal than benign traffic to the model. "
-               "Read it beside AP and recall above.\n\n"
+               "Read it beside AP and recall above. Example: LightGBM ranks 2018 Bot flows above most benign "
+               "traffic (ROC AUC near 0.9) yet catches almost none even at a 5% budget, because Bot never "
+               "outscores the top few percent of benign flows.\n\n"
              + roc_table(summary) + "\n\n<!-- results:end -->")
     text = README.read_text()
     new, n = re.subn(r"<!-- results:start -->.*?<!-- results:end -->", lambda _: block, text, flags=re.S)

@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 BUDGETS = (0.001, 0.01, 0.05)
 PRIMARY_BUDGET = 0.01
 PACKAGES = ["numpy", "pandas", "scikit-learn", "lightgbm", "torch"]
+CODE_PATHS = ["src", "scripts", "tests", "api", "environment.yml"]
 
 
 def wilson_interval(successes, n, z=1.96):
@@ -113,7 +114,8 @@ def provenance(data_paths):
             versions[pkg] = None
     return {
         "git_commit": git("rev-parse", "HEAD"),
-        "git_dirty": bool(git("status", "--porcelain", "--untracked-files=no")),
+        # code paths only: results files under reports/ change while the pipeline runs
+        "git_dirty": bool(git("status", "--porcelain", "--untracked-files=no", "--", *CODE_PATHS)),
         "data_sha256": {str(Path(p).relative_to(ROOT)): _sha256(p) for p in data_paths},
         "versions": versions,
     }

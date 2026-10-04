@@ -100,7 +100,7 @@
  ],
  "primary_budget": 0.01,
  "provenance": {
-  "git_commit": "47d1d417c1f9b5e4e982c4b467176ceecbb0a45f",
+  "git_commit": "3ea3fad6cb1f68b5e72574bd4d8f460340d8e560",
   "git_dirty": false,
   "data_sha256": {
    "data/processed/cicids2018_eval.parquet": "b672cec2a5d20b9c64259a46587204d406938db9ce537211571de5464b6f26b4"
@@ -158,6 +158,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.009933939880551631,
+     "roc_auc": 0.6589985161717536,
      "budgets": {
       "0.001": {
        "fpr": 0.001449567529687335,
@@ -214,6 +215,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.008225394577198423,
+     "roc_auc": 0.7878446165915425,
      "budgets": {
       "0.001": {
        "fpr": 0.0010367767762002131,
@@ -270,6 +272,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.698384597695088,
+     "roc_auc": 0.9216680783099573,
      "budgets": {
       "0.001": {
        "fpr": 0.0008735804317983277,
@@ -326,6 +329,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.005068722713817789,
+     "roc_auc": 0.6650641979683259,
      "budgets": {
       "0.001": {
        "fpr": 0.002035154412541159,
@@ -382,6 +386,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0008735804317983277,
@@ -438,6 +443,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0017951597884207394,
@@ -498,7 +504,7 @@
     "best_single_feature_index": 37,
     "best_single_feature_ap": 0.16322350939185445
    },
-   "seconds": 59.8
+   "seconds": 115.0
   },
   {
    "seed": 43,
@@ -542,6 +548,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.00969626684383861,
+     "roc_auc": 0.6695200246595748,
      "budgets": {
       "0.001": {
        "fpr": 0.0014687670996169685,
@@ -598,6 +605,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.01445350249779778,
+     "roc_auc": 0.8250107522679831,
      "budgets": {
       "0.001": {
        "fpr": 0.0011423744108131977,
@@ -654,6 +662,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.6904568644241634,
+     "roc_auc": 0.9136410213669165,
      "budgets": {
       "0.001": {
        "fpr": 0.0008255815069742438,
@@ -710,6 +719,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.0033495582673279253,
+     "roc_auc": 0.6593665390234481,
      "budgets": {
       "0.001": {
        "fpr": 0.0016415632289836707,
@@ -766,6 +776,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0008255815069742438,
@@ -822,6 +833,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0016607627989133043,
@@ -882,7 +894,7 @@
     "best_single_feature_index": 37,
     "best_single_feature_ap": 0.16322350939185445
    },
-   "seconds": 59.7
+   "seconds": 93.4
   },
   {
    "seed": 44,
@@ -926,6 +938,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.009305568726127119,
+     "roc_auc": 0.6632325725656395,
      "budgets": {
       "0.001": {
        "fpr": 0.001449567529687335,
@@ -982,6 +995,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.009141531696927805,
+     "roc_auc": 0.8055785486800855,
      "budgets": {
       "0.001": {
        "fpr": 0.0007775825821501599,
@@ -1038,6 +1052,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.7083687692737934,
+     "roc_auc": 0.9351129926915784,
      "budgets": {
       "0.001": {
        "fpr": 0.0005759870978890073,
@@ -1094,6 +1109,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.00312410712532727,
+     "roc_auc": 0.6647676901224692,
      "budgets": {
       "0.001": {
        "fpr": 0.0016799623688429379,
@@ -1150,6 +1166,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0005759870978890073,
@@ -1206,6 +1223,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0016799623688429379,
@@ -1266,7 +1284,7 @@
     "best_single_feature_index": 37,
     "best_single_feature_ap": 0.16322350939185445
    },
-   "seconds": 61.9
+   "seconds": 110.5
   },
   {
    "seed": 45,
@@ -1310,6 +1328,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.009671297752772078,
+     "roc_auc": 0.6677565475536881,
      "budgets": {
       "0.001": {
        "fpr": 0.0014399677447225181,
@@ -1366,6 +1385,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.0065535693946293366,
+     "roc_auc": 0.8493742432749012,
      "budgets": {
       "0.001": {
        "fpr": 0.0010751759160594803,
@@ -1422,6 +1442,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.6721743585076111,
+     "roc_auc": 0.9451304361453682,
      "budgets": {
       "0.001": {
        "fpr": 0.0007679827971853431,
@@ -1478,6 +1499,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.0030103078991283437,
+     "roc_auc": 0.6572681888533471,
      "budgets": {
       "0.001": {
        "fpr": 0.0016799623688429379,
@@ -1534,6 +1556,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0007679827971853431,
@@ -1590,6 +1613,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0016799623688429379,
@@ -1650,7 +1674,7 @@
     "best_single_feature_index": 37,
     "best_single_feature_ap": 0.16322350939185445
    },
-   "seconds": 62.8
+   "seconds": 100.7
   },
   {
    "seed": 46,
@@ -1694,6 +1718,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.010197590238153462,
+     "roc_auc": 0.6725122657605827,
      "budgets": {
       "0.001": {
        "fpr": 0.0014399677447225181,
@@ -1750,6 +1775,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.006885879237357836,
+     "roc_auc": 0.8043896085278927,
      "budgets": {
       "0.001": {
        "fpr": 0.0011423744108131977,
@@ -1806,6 +1832,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.6831699142546448,
+     "roc_auc": 0.8100646757526766,
      "budgets": {
       "0.001": {
        "fpr": 0.0011807735506724649,
@@ -1862,6 +1889,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": 0.0048414425963922226,
+     "roc_auc": 0.6553694836811628,
      "budgets": {
       "0.001": {
        "fpr": 0.0017375610786318386,
@@ -1918,6 +1946,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0011807735506724649,
@@ -1974,6 +2003,7 @@
      "n_attack": 566,
      "prevalence": 0.0005430527624691055,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0017087617237373882,
@@ -2034,7 +2064,7 @@
     "best_single_feature_index": 37,
     "best_single_feature_ap": 0.16322350939185445
    },
-   "seconds": 59.2
+   "seconds": 77.3
   }
  ]
 }

@@ -96,7 +96,7 @@
  ],
  "primary_budget": 0.01,
  "provenance": {
-  "git_commit": "47d1d417c1f9b5e4e982c4b467176ceecbb0a45f",
+  "git_commit": "3ea3fad6cb1f68b5e72574bd4d8f460340d8e560",
   "git_dirty": false,
   "data_sha256": {
    "data/processed/cicids2017_eval.parquet": "687b883b04c6178cc035e312b396891919e2778deb4ab0990b36ad954774c956"
@@ -108,7 +108,8 @@
    "scikit-learn": "1.7.1",
    "lightgbm": "4.6.0",
    "torch": "2.6.0"
-  }
+  },
+  "git_dirty_note": "Corrected after the run: the original check counted results files under reports/ that the pipeline itself rewrote mid-run. `git diff 3ea3fad -- src scripts tests api` was empty, so the code was clean at 3ea3fad."
  },
  "complete": true,
  "runs": [
@@ -155,6 +156,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.007919788396284204,
+     "roc_auc": 0.6952563159493191,
      "budgets": {
       "0.001": {
        "fpr": 0.0006573253431786062,
@@ -235,6 +237,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.008424826873982614,
+     "roc_auc": 0.7254100986371652,
      "budgets": {
       "0.001": {
        "fpr": 0.001985122536399391,
@@ -315,6 +318,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.7583724781957717,
+     "roc_auc": 0.9233917647575768,
      "budgets": {
       "0.001": {
        "fpr": 0.0017419121594233066,
@@ -395,6 +399,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.01717057708700171,
+     "roc_auc": 0.8409098925209784,
      "budgets": {
       "0.001": {
        "fpr": 0.003571467697937094,
@@ -475,6 +480,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.001985122536399391,
@@ -555,6 +561,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.003365505757074464,
@@ -639,7 +646,7 @@
     "best_single_feature_index": 58,
     "best_single_feature_ap": 0.09862836274093853
    },
-   "seconds": 35.0
+   "seconds": 49.7
   },
   {
    "seed": 43,
@@ -684,6 +691,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.007733293951714072,
+     "roc_auc": 0.6944128898177576,
      "budgets": {
       "0.001": {
        "fpr": 0.00041849713515704597,
@@ -764,6 +772,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.006083332429149066,
+     "roc_auc": 0.6246922866074549,
      "budgets": {
       "0.001": {
        "fpr": 0.0015994916684012753,
@@ -844,6 +853,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.6632911091514498,
+     "roc_auc": 0.9254196332164136,
      "budgets": {
       "0.001": {
        "fpr": 0.001478982022151864,
@@ -924,6 +934,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.015854027427918454,
+     "roc_auc": 0.8235338629139692,
      "budgets": {
       "0.001": {
        "fpr": 0.0033479770812563678,
@@ -1004,6 +1015,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0015994916684012753,
@@ -1084,6 +1096,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0022305239978527374,
@@ -1168,7 +1181,7 @@
     "best_single_feature_index": 58,
     "best_single_feature_ap": 0.10307493743364647
    },
-   "seconds": 37.8
+   "seconds": 51.9
   },
   {
    "seed": 44,
@@ -1213,6 +1226,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.007830711474589698,
+     "roc_auc": 0.6933443698007967,
      "budgets": {
       "0.001": {
        "fpr": 0.0005828284709516975,
@@ -1293,6 +1307,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.004685563234368088,
+     "roc_auc": 0.520803707386126,
      "budgets": {
       "0.001": {
        "fpr": 0.002140689534284994,
@@ -1373,6 +1388,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.6465298150150955,
+     "roc_auc": 0.9004880477528273,
      "budgets": {
       "0.001": {
        "fpr": 0.0013891475585841213,
@@ -1453,6 +1469,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.020243636095679945,
+     "roc_auc": 0.854409099716215,
      "budgets": {
       "0.001": {
        "fpr": 0.0028790850031222954,
@@ -1533,6 +1550,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.002140689534284994,
@@ -1613,6 +1631,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0024824987127378697,
@@ -1697,7 +1716,7 @@
     "best_single_feature_index": 58,
     "best_single_feature_ap": 0.09803585136538598
    },
-   "seconds": 35.3
+   "seconds": 58.0
   },
   {
    "seed": 45,
@@ -1742,6 +1761,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.008204336020112392,
+     "roc_auc": 0.7011879845475547,
      "budgets": {
       "0.001": {
        "fpr": 0.0006551342587013442,
@@ -1822,6 +1842,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.004923941318441657,
+     "roc_auc": 0.5387569211474179,
      "budgets": {
       "0.001": {
        "fpr": 0.002322549545897742,
@@ -1902,6 +1923,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.7988435187480956,
+     "roc_auc": 0.9409365271500878,
      "budgets": {
       "0.001": {
        "fpr": 0.0017462943283778306,
@@ -1982,6 +2004,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.018480132994876792,
+     "roc_auc": 0.8444818590465865,
      "budgets": {
       "0.001": {
        "fpr": 0.0029097601858039637,
@@ -2062,6 +2085,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.002322549545897742,
@@ -2142,6 +2166,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.0020245620569901072,
@@ -2226,7 +2251,7 @@
     "best_single_feature_index": 58,
     "best_single_feature_ap": 0.09910887964143018
    },
-   "seconds": 38.2
+   "seconds": 47.3
   },
   {
    "seed": 46,
@@ -2271,6 +2296,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.007891591043777055,
+     "roc_auc": 0.6961249435073954,
      "budgets": {
       "0.001": {
        "fpr": 0.0006288412449742,
@@ -2351,6 +2377,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.00563045591287999,
+     "roc_auc": 0.5992785681326223,
      "budgets": {
       "0.001": {
        "fpr": 0.002085912422353444,
@@ -2431,6 +2458,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.3818206321404583,
+     "roc_auc": 0.9218906548585936,
      "budgets": {
       "0.001": {
        "fpr": 0.0013979118964931694,
@@ -2511,6 +2539,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": 0.018976785757632994,
+     "roc_auc": 0.8471766932247989,
      "budgets": {
       "0.001": {
        "fpr": 0.003251569364256839,
@@ -2591,6 +2620,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.002085912422353444,
@@ -2671,6 +2701,7 @@
      "n_attack": 2216,
      "prevalence": 0.004831981788487411,
      "average_precision": null,
+     "roc_auc": null,
      "budgets": {
       "0.001": {
        "fpr": 0.002640256795100735,
@@ -2755,7 +2786,7 @@
     "best_single_feature_index": 58,
     "best_single_feature_ap": 0.08858508097881851
    },
-   "seconds": 35.6
+   "seconds": 46.9
   }
  ]
 }
