@@ -5,6 +5,9 @@ Rules it enforces (see the design doc):
   The test set is scored after thresholds are frozen; the actual test FPR is
   reported beside recall because a frozen threshold does not guarantee it.
 - Average precision is always reported with its no-skill baseline (prevalence).
+- ROC AUC is reported too. It ignores class balance, so on rare attacks it reads
+  high even for a useless detector; read it beside AP and prevalence. Benign
+  weights do not change it (benign is sampled uniformly), so it is unweighted.
 - Per-family recall carries its flow count and a Wilson interval. The interval
   assumes independent flows, which attack flows are not, so it is optimistic.
 """
@@ -16,7 +19,7 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 import numpy as np
-from sklearn.metrics import average_precision_score
+from sklearn.metrics import average_precision_score, roc_auc_score
 
 from src.models.evaluate import threshold_on_benign
 
@@ -75,6 +78,7 @@ def evaluate(y_test, families_test, test_scores, thresholds, weight=None, ap=Tru
         "prevalence": float(np.average(y_test, weights=weight)),
         "average_precision": (float(average_precision_score(y_test, test_scores, sample_weight=weight))
                               if ap else None),
+        "roc_auc": float(roc_auc_score(y_test, test_scores)) if ap else None,
     }
     if isinstance(test_scores, dict):  # hybrid: precomputed alerts per budget
         out["budgets"] = {b: at_threshold(y_test, families_test, test_scores[b], weight) for b in thresholds}

@@ -63,6 +63,7 @@ def summarize_fold(data):
         families = sorted(reps[0]["budgets"][PRIMARY]["per_family"])
         out["detectors"][name] = {
             "average_precision": span([r["average_precision"] for r in reps]),
+            "roc_auc": span([r.get("roc_auc") for r in reps]),
             "budgets": {b: {"recall": span([r["budgets"][b]["recall"] for r in reps]),
                             "fpr": span([r["budgets"][b]["fpr"] for r in reps])}
                         for b in reps[0]["budgets"]},

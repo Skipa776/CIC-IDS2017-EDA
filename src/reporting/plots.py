@@ -56,6 +56,7 @@ def recall_table(summary, folds, budget="0.01"):
                          "actual FPR range": f"{fpr['min']:.4f}-{fpr['max']:.4f}",
                          "AP (median)": (round(d["average_precision"]["median"], 3)
                                          if d["average_precision"] else None),
+                         "ROC AUC (median)": round(d["roc_auc"]["median"], 3) if d.get("roc_auc") else None,
                          "prevalence": round(f["prevalence"], 4)})
     return pd.DataFrame(rows)
 

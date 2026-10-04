@@ -24,6 +24,7 @@ def test_frozen_threshold_reports_actual_test_fpr():
     assert primary["fpr"] == 1.0 and primary["recall"] == 1.0
     assert out["prevalence"] == pytest.approx(10 / 110)
     assert primary["per_family"]["DoS"]["n"] == 10
+    assert out["roc_auc"] == 1.0  # every attack outscores every benign flow
 
 
 def test_weighted_prevalence_undoes_benign_sampling():
