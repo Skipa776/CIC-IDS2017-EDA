@@ -81,49 +81,6 @@ pd.DataFrame({"2017 training copy": [m17[k] for k in keys], "2017 evaluation cop
     ])
 
 
-def nb01():
-    notebook("01_eda", [
-        md(TEXT["01_intro"]),
-        code(SETUP + """
-from src.evaluation.folds import day_key
-from src.models.cross_dataset import FAMILY
-counts = {}
-for year in ["2017", "2018"]:
-    d = pd.read_parquet(f"../data/processed/cicids{year}_eval.parquet", columns=["Label", "Meta_source"])
-    d["day"] = d["Meta_source"].map(lambda s: day_key(s, year))
-    d["family"] = d["Label"].map(FAMILY)
-    counts[year] = d.groupby(["family", "day"]).size().unstack(fill_value=0)
-order17 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-c17 = counts["2017"][order17]
-attacks17 = c17.drop(index="Benign")
-one_day = (attacks17 > 0).sum(axis=1)
-print(f"Finding: in CIC-IDS2017 every attack family appears on exactly one capture day "
-      f"({(one_day == 1).sum()} of {len(one_day)} families), so holding out a day holds out its attack types. "
-      f"In CSE-CIC-IDS2018, {((counts['2018'].drop(index='Benign') > 0).sum(axis=1) > 1).sum()} families repeat on later days.")
-
-from matplotlib.colors import LinearSegmentedColormap, LogNorm
-blues = LinearSegmentedColormap.from_list("blues", ["#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"])
-fig, axes = plt.subplots(1, 2, figsize=(14, 4.2), gridspec_kw={"width_ratios": [5, 10]})
-for ax, (year, table) in zip(axes, [("2017", attacks17), ("2018", counts["2018"].drop(index="Benign"))]):
-    shown = table.replace(0, np.nan)
-    ax.imshow(shown, cmap=blues, norm=LogNorm(vmin=1, vmax=table.values.max()), aspect="auto")
-    for (i, j), v in np.ndenumerate(table.values):
-        if v:
-            ax.text(j, i, f"{v:,}", ha="center", va="center", fontsize=7.5,
-                    color="white" if v > 5000 else INK)
-    ax.set_xticks(range(table.shape[1]))
-    ax.set_xticklabels([c[5:] if year == "2018" else c[:3] for c in table.columns], rotation=0, fontsize=8)
-    ax.set_yticks(range(table.shape[0])); ax.set_yticklabels(table.index, fontsize=9)
-    ax.set_title(f"{'CIC-IDS2017' if year == '2017' else 'CSE-CIC-IDS2018'}: attack flows by capture day",
-                 loc="left", fontweight="bold", color=INK, fontsize=10.5)
-    for s in ax.spines.values(): s.set_visible(False)
-fig.tight_layout(); plt.show()"""),
-        code("""share = pd.DataFrame({"2017 flows": c17.sum(), "2017 attack share": (attacks17.sum() / c17.sum()).round(4)})
-share"""),
-        md(TEXT["01_body"]),
-    ])
-
-
 def nb02():
     notebook("02_why_random_splits_mislead", [
         md(TEXT["02_intro"]),
@@ -304,7 +261,9 @@ pd.DataFrame(rows)"""),
 
 
 if __name__ == "__main__":
-    builders = {"00": nb00, "01": nb01, "02": nb02, "03": nb03, "04": nb04, "05": nb05, "06": nb06}
+    from scripts.eda_notebooks import nb01a, nb01b, nb01c
+    builders = {"00": nb00, "01a": lambda: nb01a(notebook), "01b": lambda: nb01b(notebook),
+                "01c": lambda: nb01c(notebook), "02": nb02, "03": nb03, "04": nb04, "05": nb05, "06": nb06}
     for key in sys.argv[1:] or builders:
         builders[key]()
         print(f"Wrote notebook {key}")

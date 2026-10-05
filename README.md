@@ -71,6 +71,21 @@ or when the test is the end of each capture file. When the test is a new day, it
 shuffled-label control at chance. The near-perfect score is real but answers an easy question:
 "does the model recognize this capture's attacks?"
 
+## What the data looks like
+
+- **Most "web attack" rows are not attacks.** 628 of 652 XSS flows and 1,356 of 1,507 web
+  brute-force flows carry no payload in either direction: three packets out, one back, answered
+  by the victim server. This is consistent with the "TCP appendix" defect reported for this dataset
+  ([01c](notebooks/01c_eda_data_quality.ipynb)).
+- **71 features, far fewer signals.** Four column pairs are identical in every flow (including a
+  SYN-flag count equal to the forward PSH-flag count, a flow-tool defect), and at rank correlation
+  0.95 the features fall into 42 groups ([01b](notebooks/01b_eda_features.ipynb)).
+- **Port and protocol give attacks away in the lab.** Each attack family uses one service (all DoS,
+  DDoS and web attacks on port 80) and every attack completes a TCP handshake, against 56% of
+  benign flows ([01a](notebooks/01a_eda_overview.ipynb)).
+- **Labels conflict and rows repeat.** 697 distinct flows carry contradictory labels, and nearly
+  half of SSH-Patator and PortScan rows are exact repeats.
+
 ## Data and cleaning
 
 - A first cleaning pass treated `Init_Win_bytes = -1` ("no TCP window observed") as corrupt and
@@ -87,7 +102,9 @@ shuffled-label control at chance. The near-perfect score is real but answers an 
 | Notebook | Question |
 | --- | --- |
 | [00_data_and_cleaning](notebooks/00_data_and_cleaning.ipynb) | What is in the raw data, and what did cleaning keep? |
-| [01_eda](notebooks/01_eda.ipynb) | Which attacks happen on which day? |
+| [01a_eda_overview](notebooks/01a_eda_overview.ipynb) | Which attacks and services appear on which day? |
+| [01b_eda_features](notebooks/01b_eda_features.ipynb) | How much independent signal do the 71 features carry, and what separates each attack family? |
+| [01c_eda_data_quality](notebooks/01c_eda_data_quality.ipynb) | How trustworthy are the rows and labels? |
 | [02_why_random_splits_mislead](notebooks/02_why_random_splits_mislead.ipynb) | Why do random splits score near 1.0, and do the leakage gates pass? |
 | [03_forward_2017](notebooks/03_forward_2017.ipynb) | Can a model trained on earlier days catch the next day's new attacks? |
 | [04_forward_2018](notebooks/04_forward_2018.ipynb) | Same attack later, new tool, or new family? |

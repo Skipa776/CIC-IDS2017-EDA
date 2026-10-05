@@ -43,29 +43,6 @@ prevalence-dependent metrics weight benign rows by 10.
 - The first-pass row count comes from the old parquet file, which is kept only for this comparison.
 - Cleaning cannot fix label errors in the source data (Engelen, Rimmer & Joosen, 2021)."""
 
-TEXT["01_intro"] = """# 01 · Exploratory analysis
-
-**Question.** Which attacks happen on which capture day, and how do the days differ?
-
-This decides what any split can measure: a split that holds out a day also holds out whatever
-attacks happened that day."""
-
-TEXT["01_body"] = """## What this means for evaluation
-
-- **CIC-IDS2017:** each attack family sits on a single day, and Monday has no attacks at all.
-  Training on earlier days and testing on a later day therefore always tests attack types the
-  model has never seen. 2017 can measure unseen-attack detection, but not "the same attack later".
-- **CSE-CIC-IDS2018:** some families repeat (DoS, DDoS, web attacks, infiltration). That lets
-  `04_forward_2018` separate three questions: the same attack on a later date, the same family with a
-  new tool, and a brand-new family.
-- **Imbalance differs by day.** The attack share of a test day sets the no-skill baseline for
-  average precision, so average precision is never compared across days without its prevalence.
-
-## Limits
-
-The 2018 benign counts are a 10% sample; the attack counts are complete. The heatmap uses a log
-color scale, so small classes stay visible; read the printed counts, not the shade."""
-
 TEXT["02_intro"] = """# 02 · Why random splits score near 1.0
 
 **Question.** Why does a random train/test split give near-perfect scores, and do the
@@ -304,3 +281,133 @@ benign traffic from the network being monitored.
 
 Both datasets come from the same lab and flow tool, so this is a mild test of transfer. A dataset
 from a different tool would need retraining on a different feature set."""
+
+TEXT["01a_intro"] = """# 01a · EDA: what is in the capture
+
+**Question.** What traffic does each capture day contain, which services does it use, and how
+do attacks differ from benign traffic before looking at any flow statistic?
+
+Data: the CIC-IDS2017 evaluation copy (`00_data_and_cleaning`), which keeps repeated flows and
+conflicting labels as the raw capture has them."""
+
+TEXT["01a_services_md"] = """## Services and protocol
+
+The 2017 CSVs have no protocol column. Two proxies stand in for it: the destination port (the
+service a flow talks to) and whether a TCP window was observed (`Has_Init_Win_fwd`), which is
+true for TCP flows that completed a handshake and false for UDP, ICMP and handshake-less flows."""
+
+TEXT["01a_body"] = """## What this shows
+
+- **Day and attack are the same thing in 2017.** Each family sits on one day and Monday has none,
+  so any split by day is also a split by attack type (`03_forward_2017`).
+- **Benign traffic is stable across days.** DNS, HTTPS and HTTP dominate every day in nearly the
+  same proportions. Day-to-day drift in benign traffic is small inside this one capture, which is
+  why the bigger drift appears between years (`06_cross_year`).
+- **Most attack families are one service.** Every DoS, DDoS and web attack goes to port 80;
+  FTP-Patator to 21; SSH-Patator to 22; Bot mostly to 8080; Heartbleed and Infiltration to port
+  444. PortScan is the exception, spread across ports by design. A model can therefore learn
+  "port 22 means attack" on this data, which is a lab artifact, not attack behaviour.
+- **Every attack family completes a TCP handshake; many benign flows do not.** Roughly 44% of
+  benign flows are UDP or handshake-less (mostly DNS). A detector can lean on "is this TCP?",
+  which separates nothing on a network where attacks also use UDP.
+
+## Limits
+
+Port is the destination port only; the source side and IP addresses are not in this export."""
+
+TEXT["01b_intro"] = """# 01b · EDA: the features
+
+**Question.** What do the 71 flow features look like, how much independent information do they
+carry, and which of them separate each attack family from benign traffic?
+
+All statistics are descriptive. Correlations and separation scores use fixed random samples
+(seeds in the code) of 200,000-300,000 flows; the full data gives the same picture."""
+
+TEXT["01b_families_md"] = """## Feature families
+
+The features come from the CICFlowMeter tool: per-flow counts, sizes, timing and TCP-flag
+statistics, computed separately for the forward (client to server) and backward directions."""
+
+TEXT["01b_redundancy_md"] = """## Redundancy
+
+Some columns are not just correlated but identical in every one of the 2.8M flows. Two of these
+are suspicious rather than redundant: a SYN flag count equal to the forward PSH-flag count, and a
+CWE flag count equal to the forward URG-flag count, are not plausible traffic. They point to
+fields the flow tool mislabels or copies. The subflow pairs are identical because each flow here
+has a single subflow.
+
+Beyond exact copies, many features move together: timing statistics (total, mean, max of the
+same inter-arrival times) and size statistics (total, mean, max of the same packets)."""
+
+TEXT["01b_separation_md"] = """## What separates each attack family from benign traffic
+
+For each family and each feature, the separation score is 2 × ROC AUC − 1 of that single feature
+against a benign sample: +1 means the family's values are always higher than benign, -1 always
+lower, 0 no separation. The heatmap shows each family's three most separating features. This is
+description, not feature selection: no model uses these scores."""
+
+TEXT["01b_body"] = """## What this shows
+
+- **Far fewer signals than columns.** Four column pairs are identical, and at a rank correlation of
+  0.95 the 71 features collapse into a few dozen groups. Models that report "71 features" are
+  working with much less independent information.
+- **Heavy tails everywhere.** Byte and packet counts span from zero to hundreds of millions, and a
+  quarter of the features are zero in most flows. Scale-sensitive models (logistic regression,
+  autoencoders) need log transforms; trees do not care.
+- **Each family has its own fingerprint, often a lab one.** DoS and DDoS separate on packet sizes
+  and timing; brute force on repeated small exchanges; web attacks and several others on the
+  server's TCP window, which is a property of the victim machine rather than the attack (see
+  `03_forward_2017`). Destination port separates almost every family, for the reason in `01a`.
+
+## Limits
+
+Single-feature separation ignores interactions, and it treats destination port as a number."""
+
+TEXT["01c_intro"] = """# 01c · EDA: data quality
+
+**Question.** How trustworthy are the rows and labels themselves?
+
+Cleaning (`00_data_and_cleaning`) removed impossible values. This notebook looks at what cleaning
+cannot fix: repeated flows, contradictory labels, and flows whose label does not match their
+content."""
+
+TEXT["01c_conflicts_md"] = """## Contradictory labels
+
+The same feature vector should not be both benign and an attack. Below, every distinct vector
+that carries more than one label, grouped by the labels and whether the conflict is within one
+day or across days."""
+
+TEXT["01c_empty_md"] = """## "Attacks" with no payload
+
+An XSS or SQL injection attack has to send its payload. The table counts web-attack flows that
+carry zero bytes in both directions and describes what they look like."""
+
+TEXT["01c_body"] = """## What this shows
+
+- **Most web-attack rows are not attacks.** The large majority of XSS and web brute-force flows
+  carry no payload. They share one shape (three packets one way, one back, a few seconds, no FIN,
+  answered by the victim server's 28,960-byte window). Only a few dozen XSS flows carry the
+  actual attack. This is consistent with the "TCP appendix" defect described by Engelen, Rimmer &
+  Joosen (2021): packets left over after a connection is closed are split into a new flow that
+  inherits the attack label. It also explains `03_forward_2017`: the detector that "caught" 82%
+  of unseen web attacks was recognizing these empty server replies.
+- **Some attacks are mostly repeats.** SSH-Patator and PortScan rows are nearly half exact
+  duplicates. Recall on those classes counts the same flow many times.
+- **Labels contradict each other, across days and within them.** Most conflicting distinct flows
+  are benign on one day and PortScan on Friday: short probe-like flows (the example above is one
+  packet each way, 54 microseconds) that are indistinguishable from benign traffic in these
+  features. By row count, benign vs DoS Hulk dominates, including conflicts within Wednesday itself. Removing them before a split (as the first cleaning did) uses test
+  labels; the evaluation copy keeps them.
+
+## Known defects from the literature
+
+Engelen, Rimmer & Joosen (2021, "Troubleshooting an Intrusion Detection Dataset: the CICIDS2017
+Case Study") report flow-construction errors in the CICFlowMeter tool, labelling errors, and
+attempted attacks labelled as attacks. Findings above that match their description are stated as
+consistent with it, not as independent confirmation.
+
+## Consequences for evaluation
+
+- Per-family recall for web attacks mostly measures empty connections, not attacks.
+- Duplicates inflate both the training signal and the test counts for some families.
+- Any cleaning that uses labels must happen inside the training split, never before it."""
