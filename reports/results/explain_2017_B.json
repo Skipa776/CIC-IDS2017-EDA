@@ -1,0 +1,144 @@
+{
+ "fold": "2017_B",
+ "seed": 42,
+ "budget": 0.01,
+ "test_fpr": 0.011132900228968328,
+ "per_label_recall": {
+  "Infiltration": 0.16666666666666666,
+  "Web Attack - Brute Force": 0.8069011280690113,
+  "Web Attack - Sql Injection": 0.0,
+  "Web Attack - XSS": 0.9248466257668712
+ },
+ "top_contributing_features": {
+  "Init_Win_bytes_backward": 4.1105,
+  "Fwd IAT Min": 2.9401,
+  "Flow IAT Min": 0.7169,
+  "Bwd Packets/s": 0.602,
+  "Total Fwd Packets": 0.5381,
+  "Fwd Header Length": 0.5305,
+  "Max Packet Length": 0.0645,
+  "Fwd IAT Mean": 0.0529,
+  "min_seg_size_forward": 0.02,
+  "Init_Win_bytes_forward": 0.0172
+ },
+ "ablations": {
+  "without Init_Win_bytes_backward": {
+   "per_label_recall": {
+    "Infiltration": 0.0,
+    "Web Attack - Brute Force": 0.0537491705374917,
+    "Web Attack - Sql Injection": 0.0,
+    "Web Attack - XSS": 0.0705521472392638
+   },
+   "test_fpr": 0.01077794454365188
+  },
+  "without Fwd IAT Min": {
+   "per_label_recall": {
+    "Infiltration": 0.0,
+    "Web Attack - Brute Force": 0.8049104180491041,
+    "Web Attack - Sql Injection": 0.0,
+    "Web Attack - XSS": 0.9279141104294478
+   },
+   "test_fpr": 0.011159193242695473
+  },
+  "without Flow IAT Min": {
+   "per_label_recall": {
+    "Infiltration": 0.25,
+    "Web Attack - Brute Force": 0.7996018579960186,
+    "Web Attack - Sql Injection": 0.0,
+    "Web Attack - XSS": 0.9033742331288344
+   },
+   "test_fpr": 0.011921690640782655
+  },
+  "without Bwd Packets/s": {
+   "per_label_recall": {
+    "Infiltration": 0.25,
+    "Web Attack - Brute Force": 0.8069011280690113,
+    "Web Attack - Sql Injection": 0.0,
+    "Web Attack - XSS": 0.9202453987730062
+   },
+   "test_fpr": 0.010615804292334491
+  },
+  "without Total Fwd Packets": {
+   "per_label_recall": {
+    "Infiltration": 0.0,
+    "Web Attack - Brute Force": 0.8069011280690113,
+    "Web Attack - Sql Injection": 0.0,
+    "Web Attack - XSS": 0.9202453987730062
+   },
+   "test_fpr": 0.009984771962883028
+  },
+  "without all top 5": {
+   "per_label_recall": {
+    "Infiltration": 0.0,
+    "Web Attack - Brute Force": 0.17584605175846052,
+    "Web Attack - Sql Injection": 0.0,
+    "Web Attack - XSS": 0.3266871165644172
+   },
+   "test_fpr": 0.009980389793928506
+  }
+ },
+ "medians_of_top_features": {
+  "Tuesday FTP-Patator": {
+   "Init_Win_bytes_backward": 227.0,
+   "Fwd IAT Min": 49.0,
+   "Flow IAT Min": 3.0,
+   "Bwd Packets/s": 1.69,
+   "Total Fwd Packets": 6.0
+  },
+  "Tuesday SSH-Patator": {
+   "Init_Win_bytes_backward": 247.0,
+   "Fwd IAT Min": 3.0,
+   "Flow IAT Min": 28.0,
+   "Bwd Packets/s": 3.18,
+   "Total Fwd Packets": 14.0
+  },
+  "Thursday web brute force": {
+   "Init_Win_bytes_backward": 28960.0,
+   "Fwd IAT Min": 864.0,
+   "Flow IAT Min": 121.0,
+   "Bwd Packets/s": 0.18,
+   "Total Fwd Packets": 3.0
+  },
+  "Thursday XSS": {
+   "Init_Win_bytes_backward": 28960.0,
+   "Fwd IAT Min": 873.0,
+   "Flow IAT Min": 125.0,
+   "Bwd Packets/s": 0.19,
+   "Total Fwd Packets": 3.0
+  },
+  "Benign, Mon+Tue": {
+   "Init_Win_bytes_backward": 0.0,
+   "Fwd IAT Min": 3.0,
+   "Flow IAT Min": 4.0,
+   "Bwd Packets/s": 28.74,
+   "Total Fwd Packets": 2.0
+  }
+ },
+ "window_artifact": {
+  "most_common_web_attack_value": 28960,
+  "web_attack_share_with_value": 0.8339449541284404,
+  "benign_share_with_value": 0.0030085814800301165,
+  "benign_ports_with_value": {
+   "80": 6310,
+   "443": 219,
+   "139": 96,
+   "21": 24,
+   "43678": 1
+  }
+ },
+ "provenance": {
+  "git_commit": "4f4ee7fbcb1587c51c111ea3645aab33020f6e8d",
+  "git_dirty": false,
+  "data_sha256": {
+   "data/processed/cicids2017_eval.parquet": "687b883b04c6178cc035e312b396891919e2778deb4ab0990b36ad954774c956"
+  },
+  "versions": {
+   "python": "3.12.12",
+   "numpy": "1.26.4",
+   "pandas": "2.2.2",
+   "scikit-learn": "1.7.1",
+   "lightgbm": "4.6.0",
+   "torch": "2.6.0"
+  }
+ }
+}

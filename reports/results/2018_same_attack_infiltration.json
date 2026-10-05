@@ -1,0 +1,2073 @@
+{
+ "fold": {
+  "name": "2018_same_attack_infiltration",
+  "question": "same attack, later date",
+  "train_days": [
+   "2018-02-14",
+   "2018-02-15",
+   "2018-02-16",
+   "2018-02-20",
+   "2018-02-21",
+   "2018-02-22",
+   "2018-02-23",
+   "2018-02-28"
+  ],
+  "val_days": [
+   "holdout"
+  ],
+  "test_days": [
+   "2018-03-01"
+  ],
+  "train_year": "2018",
+  "test_year": "2018",
+  "anomaly_only": false
+ },
+ "features": [
+  "Destination Port",
+  "Flow Duration",
+  "Total Fwd Packets",
+  "Total Backward Packets",
+  "Total Length of Fwd Packets",
+  "Total Length of Bwd Packets",
+  "Fwd Packet Length Max",
+  "Fwd Packet Length Min",
+  "Fwd Packet Length Mean",
+  "Fwd Packet Length Std",
+  "Bwd Packet Length Max",
+  "Bwd Packet Length Min",
+  "Bwd Packet Length Mean",
+  "Bwd Packet Length Std",
+  "Flow Bytes/s",
+  "Flow Packets/s",
+  "Flow IAT Mean",
+  "Flow IAT Std",
+  "Flow IAT Max",
+  "Flow IAT Min",
+  "Fwd IAT Total",
+  "Fwd IAT Mean",
+  "Fwd IAT Std",
+  "Fwd IAT Max",
+  "Fwd IAT Min",
+  "Bwd IAT Total",
+  "Bwd IAT Mean",
+  "Bwd IAT Std",
+  "Bwd IAT Max",
+  "Bwd IAT Min",
+  "Fwd PSH Flags",
+  "Fwd URG Flags",
+  "Fwd Header Length",
+  "Bwd Header Length",
+  "Fwd Packets/s",
+  "Bwd Packets/s",
+  "Min Packet Length",
+  "Max Packet Length",
+  "Packet Length Mean",
+  "Packet Length Std",
+  "Packet Length Variance",
+  "FIN Flag Count",
+  "SYN Flag Count",
+  "RST Flag Count",
+  "PSH Flag Count",
+  "ACK Flag Count",
+  "URG Flag Count",
+  "CWE Flag Count",
+  "ECE Flag Count",
+  "Down/Up Ratio",
+  "Average Packet Size",
+  "Avg Fwd Segment Size",
+  "Avg Bwd Segment Size",
+  "Subflow Fwd Packets",
+  "Subflow Fwd Bytes",
+  "Subflow Bwd Packets",
+  "Subflow Bwd Bytes",
+  "Init_Win_bytes_forward",
+  "Init_Win_bytes_backward",
+  "act_data_pkt_fwd",
+  "min_seg_size_forward",
+  "Active Mean",
+  "Active Std",
+  "Active Max",
+  "Active Min",
+  "Idle Mean",
+  "Idle Std",
+  "Idle Max",
+  "Idle Min",
+  "Has_Init_Win_fwd",
+  "Has_Init_Win_bwd"
+ ],
+ "budgets": [
+  0.001,
+  0.01,
+  0.05
+ ],
+ "primary_budget": 0.01,
+ "provenance": {
+  "git_commit": "3ea3fad6cb1f68b5e72574bd4d8f460340d8e560",
+  "git_dirty": false,
+  "data_sha256": {
+   "data/processed/cicids2018_eval.parquet": "b672cec2a5d20b9c64259a46587204d406938db9ce537211571de5464b6f26b4"
+  },
+  "versions": {
+   "python": "3.12.12",
+   "numpy": "1.26.4",
+   "pandas": "2.2.2",
+   "scikit-learn": "1.7.1",
+   "lightgbm": "4.6.0",
+   "torch": "2.6.0"
+  },
+  "git_dirty_note": "Corrected after the run: the original check counted results files under reports/ that the pipeline itself rewrote mid-run. `git diff 3ea3fad -- src scripts tests api` was empty, so the code was clean at 3ea3fad."
+ },
+ "complete": true,
+ "runs": [
+  {
+   "seed": 42,
+   "sizes": {
+    "train": 2886614,
+    "validation": 721654,
+    "test": 115803,
+    "validation_attacks": 473668
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "Infiltration"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9785693777075927,
+      "0.75": 0.9776615688625788,
+      "0.5": 0.9770915493552446,
+      "0.25": 0.9752168185311231,
+      "0.0": 0.010775479871977842
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.8498864183352053,
+      "0.75": 0.8476760093567647,
+      "0.5": 0.5922903806041362,
+      "0.25": 0.5525579097595784,
+      "0.0": 0.010775479871977842
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.26194532881224447,
+     "roc_auc": 0.47406324358988233,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0006837606837606838,
+       "recall": 0.0010822159453697392,
+       "precision": 0.38461538461538464,
+       "alerts_per_10k_flows": 7.965613061154462,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0010822159453697392,
+         "wilson_95": [
+          0.000889949945904708,
+          0.0013159646429994976
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.017051282051282052,
+       "recall": 0.009361167927448243,
+       "precision": 0.17816683831101957,
+       "alerts_per_10k_flows": 148.74250543040353,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.009361167927448243,
+         "wilson_95": [
+          0.008760322953238687,
+          0.010002807243389526
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.06752136752136752,
+       "recall": 0.05088579375128513,
+       "precision": 0.22934347868500635,
+       "alerts_per_10k_flows": 628.1192268453415,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.05088579375128513,
+         "wilson_95": [
+          0.049487368802102014,
+          0.052321560462287
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.34310609117428914,
+     "roc_auc": 0.5823937552995051,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0023504273504273503,
+       "recall": 0.001915522223304438,
+       "precision": 0.24346629986244842,
+       "alerts_per_10k_flows": 22.27307959792036,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.001915522223304438,
+         "wilson_95": [
+          0.0016535460340838593,
+          0.0022189118251402786
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.017350427350427352,
+       "recall": 0.025908249732151552,
+       "precision": 0.37093275488069416,
+       "alerts_per_10k_flows": 197.73102575650347,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.025908249732151552,
+         "wilson_95": [
+          0.024903479285822913,
+          0.026952438707158244
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.07371794871794872,
+       "recall": 0.08600370117853316,
+       "precision": 0.3153946898440291,
+       "alerts_per_10k_flows": 771.9598165458038,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.08600370117853316,
+         "wilson_95": [
+          0.08421309505744465,
+          0.08782872917042722
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3097146861851777,
+     "roc_auc": 0.4985673923618309,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.03158119658119658,
+       "recall": 0.05056112896767421,
+       "precision": 0.38733211739346707,
+       "alerts_per_10k_flows": 369.5431720909428,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.05056112896767421,
+         "wilson_95": [
+          0.04916700296968292,
+          0.051992623721854175
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.1476923076923077,
+       "recall": 0.2060539159983983,
+       "precision": 0.35522388059701493,
+       "alerts_per_10k_flows": 1642.1417695303046,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.2060539159983983,
+         "wilson_95": [
+          0.20345821340614922,
+          0.20867405884326828
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.26726495726495725,
+       "recall": 0.3019166044392498,
+       "precision": 0.3084765253543864,
+       "alerts_per_10k_flows": 2770.7465924026433,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.3019166044392498,
+         "wilson_95": [
+          0.2989647634316336,
+          0.30488491516186134
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2884782153313102,
+     "roc_auc": 0.4870880658312885,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007393162393162393,
+       "recall": 0.013819897622371569,
+       "precision": 0.424675756568008,
+       "alerts_per_10k_flows": 92.12537874958257,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013819897622371569,
+         "wilson_95": [
+          0.013087116243192747,
+          0.014593102620601858
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.014871794871794871,
+       "recall": 0.0170016125017586,
+       "precision": 0.3110275193031083,
+       "alerts_per_10k_flows": 154.7473521995815,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0170016125017586,
+         "wilson_95": [
+          0.016187912097932137,
+          0.017855471979811296
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.025683760683760683,
+       "recall": 0.029025031654816402,
+       "precision": 0.30855959502991254,
+       "alerts_per_10k_flows": 266.2965720290561,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.029025031654816402,
+         "wilson_95": [
+          0.02796201784274626,
+          0.03012720484961335
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.03158119658119658,
+       "recall": 0.05056112896767421,
+       "precision": 0.38733211739346707,
+       "alerts_per_10k_flows": 369.5431720909428,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.05056112896767421,
+         "wilson_95": [
+          0.04916700296968292,
+          0.051992623721854175
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.1476923076923077,
+       "recall": 0.2060539159983983,
+       "precision": 0.35522388059701493,
+       "alerts_per_10k_flows": 1642.1417695303046,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.2060539159983983,
+         "wilson_95": [
+          0.20345821340614922,
+          0.20867405884326828
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.26726495726495725,
+       "recall": 0.3019166044392498,
+       "precision": 0.3084765253543864,
+       "alerts_per_10k_flows": 2770.7465924026433,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.3019166044392498,
+         "wilson_95": [
+          0.2989647634316336,
+          0.30488491516186134
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007393162393162393,
+       "recall": 0.013819897622371569,
+       "precision": 0.424675756568008,
+       "alerts_per_10k_flows": 92.12537874958257,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013819897622371569,
+         "wilson_95": [
+          0.013087116243192747,
+          0.014593102620601858
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.014871794871794871,
+       "recall": 0.0170016125017586,
+       "precision": 0.3110275193031083,
+       "alerts_per_10k_flows": 154.7473521995815,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0170016125017586,
+         "wilson_95": [
+          0.016187912097932137,
+          0.017855471979811296
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.025683760683760683,
+       "recall": 0.029025031654816402,
+       "precision": 0.30855959502991254,
+       "alerts_per_10k_flows": 266.2965720290561,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.029025031654816402,
+         "wilson_95": [
+          0.02796201784274626,
+          0.03012720484961335
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 25175,
+    "exact_twin_test_fraction": 0.21739505884994345,
+    "exact_twin_attack_rows": 19857,
+    "shuffled_label_ap": 0.2792963655812003,
+    "best_single_feature_index": 60,
+    "best_single_feature_ap": 0.38943584249704627
+   },
+   "seconds": 141.3
+  },
+  {
+   "seed": 43,
+   "sizes": {
+    "train": 2886614,
+    "validation": 721654,
+    "test": 115803,
+    "validation_attacks": 473668
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "Infiltration"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9783835935718689,
+      "0.75": 0.9780162476671423,
+      "0.5": 0.9767073139836341,
+      "0.25": 0.9746320207402653,
+      "0.0": 0.006025317310859083
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.8487907141711072,
+      "0.75": 0.627433138822973,
+      "0.5": 0.5748118935625797,
+      "0.25": 0.5456923414712415,
+      "0.0": 0.006025317310859083
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2617380180477314,
+     "roc_auc": 0.4736024679518397,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0002564102564102564,
+       "recall": 0.0008982392346568834,
+       "precision": 0.5804195804195804,
+       "alerts_per_10k_flows": 4.381087183634954,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0008982392346568834,
+         "wilson_95": [
+          0.0007247224596004687,
+          0.0011132540046876476
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.016495726495726497,
+       "recall": 0.009090613941105809,
+       "precision": 0.17872340425531916,
+       "alerts_per_10k_flows": 143.99377456702297,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.009090613941105809,
+         "wilson_95": [
+          0.00849872982585484,
+          0.00972331489339677
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.06547008547008547,
+       "recall": 0.04989015508154497,
+       "precision": 0.2313095835423984,
+       "alerts_per_10k_flows": 610.5948781108017,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.04989015508154497,
+         "wilson_95": [
+          0.04850496492626594,
+          0.05131276978137719
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3623746377116374,
+     "roc_auc": 0.590297095794888,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.002735042735042735,
+       "recall": 0.0022185426880079653,
+       "precision": 0.24260355029585798,
+       "alerts_per_10k_flows": 25.888242448752003,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0022185426880079653,
+         "wilson_95": [
+          0.0019351736585051687,
+          0.0025432999353807626
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.018162393162393164,
+       "recall": 0.02401437182775451,
+       "precision": 0.3430205595918998,
+       "alerts_per_10k_flows": 198.19058035618548,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.02401437182775451,
+         "wilson_95": [
+          0.023046861089191045,
+          0.025021458562153903
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.07982905982905983,
+       "recall": 0.1186216897719771,
+       "precision": 0.3697918423804865,
+       "alerts_per_10k_flows": 908.1105259449208,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.1186216897719771,
+         "wilson_95": [
+          0.11655267075919157,
+          0.12072241862120339
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3106645259376182,
+     "roc_auc": 0.503276891840656,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.015555555555555555,
+       "recall": 0.0344361113816651,
+       "precision": 0.46643213133978306,
+       "alerts_per_10k_flows": 209.00543193536822,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0344361113816651,
+         "wilson_95": [
+          0.03327959315139,
+          0.035631339088501655
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.17038461538461538,
+       "recall": 0.22239537677348137,
+       "precision": 0.3401191658391261,
+       "alerts_per_10k_flows": 1851.0859275190487,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.22239537677348137,
+         "wilson_95": [
+          0.21972558718395716,
+          0.22508824789900708
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.266965811965812,
+       "recall": 0.30167851693126846,
+       "precision": 0.3085471409913001,
+       "alerts_per_10k_flows": 2767.9279908579274,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.30167851693126846,
+         "wilson_95": [
+          0.2987273486198305,
+          0.30464617475357303
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2886235450779989,
+     "roc_auc": 0.4872535417366754,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007307692307692308,
+       "recall": 0.013776608984556779,
+       "precision": 0.4267515923566879,
+       "alerts_per_10k_flows": 91.3900913900914,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013776608984556779,
+         "wilson_95": [
+          0.013044992258007388,
+          0.01454865292940696
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.01482905982905983,
+       "recall": 0.017066545458480784,
+       "precision": 0.31246284921735684,
+       "alerts_per_10k_flows": 154.62480430633298,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.017066545458480784,
+         "wilson_95": [
+          0.016251280238278876,
+          0.017921964354034946
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.028846153846153848,
+       "recall": 0.03187125959113882,
+       "precision": 0.3037648272305312,
+       "alerts_per_10k_flows": 297.02545626112504,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.03187125959113882,
+         "wilson_95": [
+          0.030757970401064594,
+          0.033023471513296876
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.015555555555555555,
+       "recall": 0.0344361113816651,
+       "precision": 0.46643213133978306,
+       "alerts_per_10k_flows": 209.00543193536822,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0344361113816651,
+         "wilson_95": [
+          0.03327959315139,
+          0.035631339088501655
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.17038461538461538,
+       "recall": 0.22239537677348137,
+       "precision": 0.3401191658391261,
+       "alerts_per_10k_flows": 1851.0859275190487,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.22239537677348137,
+         "wilson_95": [
+          0.21972558718395716,
+          0.22508824789900708
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.266965811965812,
+       "recall": 0.30167851693126846,
+       "precision": 0.3085471409913001,
+       "alerts_per_10k_flows": 2767.9279908579274,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.30167851693126846,
+         "wilson_95": [
+          0.2987273486198305,
+          0.30464617475357303
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007307692307692308,
+       "recall": 0.013776608984556779,
+       "precision": 0.4267515923566879,
+       "alerts_per_10k_flows": 91.3900913900914,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013776608984556779,
+         "wilson_95": [
+          0.013044992258007388,
+          0.01454865292940696
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.01482905982905983,
+       "recall": 0.017066545458480784,
+       "precision": 0.31246284921735684,
+       "alerts_per_10k_flows": 154.62480430633298,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.017066545458480784,
+         "wilson_95": [
+          0.016251280238278876,
+          0.017921964354034946
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.028846153846153848,
+       "recall": 0.03187125959113882,
+       "precision": 0.3037648272305312,
+       "alerts_per_10k_flows": 297.02545626112504,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.03187125959113882,
+         "wilson_95": [
+          0.030757970401064594,
+          0.033023471513296876
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 25203,
+    "exact_twin_test_fraction": 0.21763684878630088,
+    "exact_twin_attack_rows": 19884,
+    "shuffled_label_ap": 0.2652085936485195,
+    "best_single_feature_index": 60,
+    "best_single_feature_ap": 0.38943584249704627
+   },
+   "seconds": 149.8
+  },
+  {
+   "seed": 44,
+   "sizes": {
+    "train": 2886614,
+    "validation": 721654,
+    "test": 115803,
+    "validation_attacks": 473668
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "Infiltration"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9781513634022142,
+      "0.75": 0.9777481273803592,
+      "0.5": 0.9766418672994587,
+      "0.25": 0.9748705844600015,
+      "0.0": 0.010420801067414307
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.8495676296477702,
+      "0.75": 0.8475176706047274,
+      "0.5": 0.5904367616136197,
+      "0.25": 0.5500413791938658,
+      "0.0": 0.010420801067414307
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2626137571104044,
+     "roc_auc": 0.47560840816116623,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0005555555555555556,
+       "recall": 0.0010713937859160418,
+       "precision": 0.43231441048034935,
+       "alerts_per_10k_flows": 7.015866888478354,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0010713937859160418,
+         "wilson_95": [
+          0.0008801846189816694,
+          0.001304086550827472
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.017350427350427352,
+       "recall": 0.009545144638161099,
+       "precision": 0.17847025495750707,
+       "alerts_per_10k_flows": 151.40792210855906,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.009545144638161099,
+         "wilson_95": [
+          0.00893828198442512,
+          0.010192786336819179
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.06760683760683761,
+       "recall": 0.05157841195632176,
+       "precision": 0.23151656465559117,
+       "alerts_per_10k_flows": 630.6927326035607,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.05157841195632176,
+         "wilson_95": [
+          0.0501708692171796,
+          0.05302323886929351
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.38189844584024146,
+     "roc_auc": 0.5963177408214907,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0021794871794871794,
+       "recall": 0.0033115807928314014,
+       "precision": 0.375,
+       "alerts_per_10k_flows": 24.999770222700157,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0033115807928314014,
+         "wilson_95": [
+          0.0029612284578500975,
+          0.003703230464637303
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.017435897435897435,
+       "recall": 0.03002067032455656,
+       "precision": 0.40472716661803326,
+       "alerts_per_10k_flows": 209.98581508135646,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.03002067032455656,
+         "wilson_95": [
+          0.028939774864888163,
+          0.03114064238421734
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.12752136752136753,
+       "recall": 0.3364825817343593,
+       "precision": 0.5102737477844154,
+       "alerts_per_10k_flows": 1866.7720578548606,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.3364825817343593,
+         "wilson_95": [
+          0.3334427998699215,
+          0.3395359593132082
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3061131902769958,
+     "roc_auc": 0.4936792030746773,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.018931623931623932,
+       "recall": 0.034988041513803664,
+       "precision": 0.42189742920527207,
+       "alerts_per_10k_flows": 234.7711264908717,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.034988041513803664,
+         "wilson_95": [
+          0.03382245617353621,
+          0.0361922904402037
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.14162393162393164,
+       "recall": 0.1915522223304438,
+       "precision": 0.34815106215578284,
+       "alerts_per_10k_flows": 1557.5837231888188,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.1915522223304438,
+         "wilson_95": [
+          0.1890277025774056,
+          0.19410238808462604
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.27111111111111114,
+       "recall": 0.30192742659870353,
+       "precision": 0.3054445527102333,
+       "alerts_per_10k_flows": 2798.3505053568747,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.30192742659870353,
+         "wilson_95": [
+          0.29897555503642964,
+          0.30489576697616044
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.28656319176412465,
+     "roc_auc": 0.4866283030363743,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007264957264957265,
+       "recall": 0.013863186260186358,
+       "precision": 0.42972156994297217,
+       "alerts_per_10k_flows": 91.32881744346712,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013863186260186358,
+         "wilson_95": [
+          0.013129242124708427,
+          0.014637550415466435
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.01482905982905983,
+       "recall": 0.0170016125017586,
+       "precision": 0.3116445149771871,
+       "alerts_per_10k_flows": 154.44098246646018,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0170016125017586,
+         "wilson_95": [
+          0.016187912097932137,
+          0.017855471979811296
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.025,
+       "recall": 0.028397346406501954,
+       "precision": 0.30965305640783575,
+       "alerts_per_10k_flows": 259.6177118470112,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.028397346406501954,
+         "wilson_95": [
+          0.027345778270893566,
+          0.02948812611395233
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.018931623931623932,
+       "recall": 0.034988041513803664,
+       "precision": 0.42189742920527207,
+       "alerts_per_10k_flows": 234.7711264908717,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.034988041513803664,
+         "wilson_95": [
+          0.03382245617353621,
+          0.0361922904402037
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.14162393162393164,
+       "recall": 0.1915522223304438,
+       "precision": 0.34815106215578284,
+       "alerts_per_10k_flows": 1557.5837231888188,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.1915522223304438,
+         "wilson_95": [
+          0.1890277025774056,
+          0.19410238808462604
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.27111111111111114,
+       "recall": 0.30192742659870353,
+       "precision": 0.3054445527102333,
+       "alerts_per_10k_flows": 2798.3505053568747,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.30192742659870353,
+         "wilson_95": [
+          0.29897555503642964,
+          0.30489576697616044
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007264957264957265,
+       "recall": 0.013863186260186358,
+       "precision": 0.42972156994297217,
+       "alerts_per_10k_flows": 91.32881744346712,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013863186260186358,
+         "wilson_95": [
+          0.013129242124708427,
+          0.014637550415466435
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.01482905982905983,
+       "recall": 0.0170016125017586,
+       "precision": 0.3116445149771871,
+       "alerts_per_10k_flows": 154.44098246646018,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0170016125017586,
+         "wilson_95": [
+          0.016187912097932137,
+          0.017855471979811296
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.025,
+       "recall": 0.028397346406501954,
+       "precision": 0.30965305640783575,
+       "alerts_per_10k_flows": 259.6177118470112,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.028397346406501954,
+         "wilson_95": [
+          0.027345778270893566,
+          0.02948812611395233
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 25149,
+    "exact_twin_test_fraction": 0.21717053962332583,
+    "exact_twin_attack_rows": 19819,
+    "shuffled_label_ap": 0.2787967581477664,
+    "best_single_feature_index": 60,
+    "best_single_feature_ap": 0.38943584249704627
+   },
+   "seconds": 133.7
+  },
+  {
+   "seed": 45,
+   "sizes": {
+    "train": 2886614,
+    "validation": 721654,
+    "test": 115803,
+    "validation_attacks": 473668
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "Infiltration"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9783434810880195,
+      "0.75": 0.9778283523480581,
+      "0.5": 0.9769353217865678,
+      "0.25": 0.9749170304939324,
+      "0.0": 0.010587584552893587
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.8494916270467923,
+      "0.75": 0.848942719373063,
+      "0.5": 0.5915831341783696,
+      "0.25": 0.5455698928363326,
+      "0.0": 0.010587584552893587
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2622046399093767,
+     "roc_auc": 0.47383986473780637,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.00042735042735042735,
+       "recall": 0.0009739943508327651,
+       "precision": 0.47368421052631576,
+       "alerts_per_10k_flows": 5.8210249293051834,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0009739943508327651,
+         "wilson_95": [
+          0.0007925459692076304,
+          0.0011969344287459343
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.016965811965811966,
+       "recall": 0.009220479854550177,
+       "precision": 0.17669017005391954,
+       "alerts_per_10k_flows": 147.73148531110314,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.009220479854550177,
+         "wilson_95": [
+          0.00862427769965395,
+          0.00985748804873843
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.06756410256410256,
+       "recall": 0.05142690172397,
+       "precision": 0.23110592354829296,
+       "alerts_per_10k_flows": 629.9574452440694,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.05142690172397,
+         "wilson_95": [
+          0.05002134734844448,
+          0.052869752870697735
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3757726696075376,
+     "roc_auc": 0.5975146205524278,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.006282051282051282,
+       "recall": 0.0012120818588141078,
+       "precision": 0.07079646017699115,
+       "alerts_per_10k_flows": 48.46769177979369,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0012120818588141078,
+         "wilson_95": [
+          0.001007521573004046,
+          0.001458114045040928
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.01782051282051282,
+       "recall": 0.03136261809681504,
+       "precision": 0.4100169779286927,
+       "alerts_per_10k_flows": 216.54212737015285,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.03136261809681504,
+         "wilson_95": [
+          0.030258127221867655,
+          0.032506073995025794
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.07363247863247863,
+       "recall": 0.20181162949254894,
+       "precision": 0.5197614136796923,
+       "alerts_per_10k_flows": 1099.1933284926915,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.20181162949254894,
+         "wilson_95": [
+          0.19923620170089779,
+          0.2044118502632546
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3217208992866012,
+     "roc_auc": 0.5048683764106153,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.017777777777777778,
+       "recall": 0.04506347196519594,
+       "precision": 0.5002402691013935,
+       "alerts_per_10k_flows": 255.02216585019133,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.04506347196519594,
+         "wilson_95": [
+          0.04374472101958139,
+          0.04642004877166317
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.15153846153846154,
+       "recall": 0.2098416718071924,
+       "precision": 0.3535095715587967,
+       "alerts_per_10k_flows": 1680.4379861704701,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.2098416718071924,
+         "wilson_95": [
+          0.20722823749549757,
+          0.21247923143719233
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.26636752136752134,
+       "recall": 0.3032477300520546,
+       "precision": 0.3101349182632179,
+       "alerts_per_10k_flows": 2768.081175724488,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.3032477300520546,
+         "wilson_95": [
+          0.30029214544149285,
+          0.3062196737006949
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2894107371135264,
+     "roc_auc": 0.4886877109569554,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007222222222222222,
+       "recall": 0.013592632273843924,
+       "precision": 0.4263408010862186,
+       "alerts_per_10k_flows": 90.25652337754248,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013592632273843924,
+         "wilson_95": [
+          0.012865986683047918,
+          0.014359720379750343
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.014658119658119658,
+       "recall": 0.01726134432864734,
+       "precision": 0.3174129353233831,
+       "alerts_per_10k_flows": 153.95079089346606,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.01726134432864734,
+         "wilson_95": [
+          0.016441403340926922,
+          0.01812142279509806
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.02688034188034188,
+       "recall": 0.03226085733147192,
+       "precision": 0.32154028691619024,
+       "alerts_per_10k_flows": 284.0353795767809,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.03226085733147192,
+         "wilson_95": [
+          0.031140881116799454,
+          0.03341972388498432
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.017777777777777778,
+       "recall": 0.04506347196519594,
+       "precision": 0.5002402691013935,
+       "alerts_per_10k_flows": 255.02216585019133,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.04506347196519594,
+         "wilson_95": [
+          0.04374472101958139,
+          0.04642004877166317
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.15153846153846154,
+       "recall": 0.2098416718071924,
+       "precision": 0.3535095715587967,
+       "alerts_per_10k_flows": 1680.4379861704701,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.2098416718071924,
+         "wilson_95": [
+          0.20722823749549757,
+          0.21247923143719233
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.26636752136752134,
+       "recall": 0.3032477300520546,
+       "precision": 0.3101349182632179,
+       "alerts_per_10k_flows": 2768.081175724488,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.3032477300520546,
+         "wilson_95": [
+          0.30029214544149285,
+          0.3062196737006949
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.007222222222222222,
+       "recall": 0.013592632273843924,
+       "precision": 0.4263408010862186,
+       "alerts_per_10k_flows": 90.25652337754248,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.013592632273843924,
+         "wilson_95": [
+          0.012865986683047918,
+          0.014359720379750343
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.014658119658119658,
+       "recall": 0.01726134432864734,
+       "precision": 0.3174129353233831,
+       "alerts_per_10k_flows": 153.95079089346606,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.01726134432864734,
+         "wilson_95": [
+          0.016441403340926922,
+          0.01812142279509806
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.02688034188034188,
+       "recall": 0.03226085733147192,
+       "precision": 0.32154028691619024,
+       "alerts_per_10k_flows": 284.0353795767809,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.03226085733147192,
+         "wilson_95": [
+          0.031140881116799454,
+          0.03341972388498432
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 25209,
+    "exact_twin_test_fraction": 0.21768866091552033,
+    "exact_twin_attack_rows": 19861,
+    "shuffled_label_ap": 0.2757858722638172,
+    "best_single_feature_index": 60,
+    "best_single_feature_ap": 0.38943584249704627
+   },
+   "seconds": 177.2
+  },
+  {
+   "seed": 46,
+   "sizes": {
+    "train": 2886614,
+    "validation": 721654,
+    "test": 115803,
+    "validation_attacks": 473668
+   },
+   "unseen_test_families": [],
+   "seen_test_families": [
+    "Infiltration"
+   ],
+   "hybrid_choices": {
+    "lgbm+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.9779444674328854,
+      "0.75": 0.9777312379134753,
+      "0.5": 0.9765700870652018,
+      "0.25": 0.9746446878404283,
+      "0.0": 0.01028990769906348
+     }
+    },
+    "logreg+autoencoder": {
+     "anomaly": "autoencoder",
+     "share_supervised": 1.0,
+     "validation_recall_by_share": {
+      "1.0": 0.8495169612471183,
+      "0.75": 0.8480011315942813,
+      "0.5": 0.5873565450906542,
+      "0.25": 0.5490301223641876,
+      "0.0": 0.01028990769906348
+     }
+    }
+   },
+   "detectors": {
+    "iforest": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.2624569380374162,
+     "roc_auc": 0.47591203147564953,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.000641025641025641,
+       "recall": 0.001136326742638226,
+       "precision": 0.4117647058823529,
+       "alerts_per_10k_flows": 7.8124281945937994,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.001136326742638226,
+         "wilson_95": [
+          0.0009388536120781619,
+          0.0013752780723013639
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.01752136752136752,
+       "recall": 0.009772409986688744,
+       "precision": 0.18049170497701378,
+       "alerts_per_10k_flows": 153.27677748059915,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.009772409986688744,
+         "wilson_95": [
+          0.009158195368423725,
+          0.010427384753816922
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.06752136752136752,
+       "recall": 0.05118881421598866,
+       "precision": 0.23039454456892353,
+       "alerts_per_10k_flows": 628.9770620980813,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.05118881421598866,
+         "wilson_95": [
+          0.049786391353997955,
+          0.05262855364505285
+         ]
+        }
+       }
+      }
+     }
+    },
+    "autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3455908475926719,
+     "roc_auc": 0.584646378771326,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0020085470085470084,
+       "recall": 0.0016125017586009112,
+       "precision": 0.2407108239095315,
+       "alerts_per_10k_flows": 18.964286480210045,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.0016125017586009112,
+         "wilson_95": [
+          0.001373688381322197,
+          0.001892753743240147
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.017564102564102565,
+       "recall": 0.028960098698094218,
+       "precision": 0.394341290893015,
+       "alerts_per_10k_flows": 207.90250089613147,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.028960098698094218,
+         "wilson_95": [
+          0.027898262627055814,
+          0.030061099550733415
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.06871794871794872,
+       "recall": 0.08729153815352315,
+       "precision": 0.3340511886026671,
+       "alerts_per_10k_flows": 739.7603575947526,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.08729153815352315,
+         "wilson_95": [
+          0.0854886786605051,
+          0.08912871243967942
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.3105939905046382,
+     "roc_auc": 0.49929720642140696,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.028974358974358974,
+       "recall": 0.04753092432063894,
+       "precision": 0.39312567132116005,
+       "alerts_per_10k_flows": 342.2762658431448,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.04753092432063894,
+         "wilson_95": [
+          0.046177721123948356,
+          0.04892174822097081
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.1264102564102564,
+       "recall": 0.18808913130526064,
+       "precision": 0.3701022146507666,
+       "alerts_per_10k_flows": 1438.7122667377444,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.18808913130526064,
+         "wilson_95": [
+          0.18558241596552022,
+          0.19062178058609092
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.2685897435897436,
+       "recall": 0.30427583520015583,
+       "precision": 0.3090825143460194,
+       "alerts_per_10k_flows": 2786.9229143114494,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.30427583520015583,
+         "wilson_95": [
+          0.3013173793219684,
+          0.30725056463425054
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": 0.28939838899052994,
+     "roc_auc": 0.4898614930084687,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0071794871794871795,
+       "recall": 0.01373332034674199,
+       "precision": 0.4303153611393693,
+       "alerts_per_10k_flows": 90.34843429747889,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.01373332034674199,
+         "wilson_95": [
+          0.013002870177965146,
+          0.014504201333068949
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.014358974358974359,
+       "recall": 0.017109834096295577,
+       "precision": 0.31997571341833636,
+       "alerts_per_10k_flows": 151.37728513524692,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.017109834096295577,
+         "wilson_95": [
+          0.016293527402476023,
+          0.017966290866218062
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.025598290598290597,
+       "recall": 0.029003387335909007,
+       "precision": 0.3091118800461361,
+       "alerts_per_10k_flows": 265.62255861618917,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.029003387335909007,
+         "wilson_95": [
+          0.027940765944426404,
+          0.03010516990974308
+         ]
+        }
+       }
+      }
+     }
+    },
+    "lgbm+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.028974358974358974,
+       "recall": 0.04753092432063894,
+       "precision": 0.39312567132116005,
+       "alerts_per_10k_flows": 342.2762658431448,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.04753092432063894,
+         "wilson_95": [
+          0.046177721123948356,
+          0.04892174822097081
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.1264102564102564,
+       "recall": 0.18808913130526064,
+       "precision": 0.3701022146507666,
+       "alerts_per_10k_flows": 1438.7122667377444,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.18808913130526064,
+         "wilson_95": [
+          0.18558241596552022,
+          0.19062178058609092
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.2685897435897436,
+       "recall": 0.30427583520015583,
+       "precision": 0.3090825143460194,
+       "alerts_per_10k_flows": 2786.9229143114494,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.30427583520015583,
+         "wilson_95": [
+          0.3013173793219684,
+          0.30725056463425054
+         ]
+        }
+       }
+      }
+     }
+    },
+    "logreg+autoencoder": {
+     "n_test": 115803,
+     "n_attack": 92403,
+     "prevalence": 0.2830948244960984,
+     "average_precision": null,
+     "roc_auc": null,
+     "budgets": {
+      "0.001": {
+       "fpr": 0.0071794871794871795,
+       "recall": 0.01373332034674199,
+       "precision": 0.4303153611393693,
+       "alerts_per_10k_flows": 90.34843429747889,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.01373332034674199,
+         "wilson_95": [
+          0.013002870177965146,
+          0.014504201333068949
+         ]
+        }
+       }
+      },
+      "0.01": {
+       "fpr": 0.014358974358974359,
+       "recall": 0.017109834096295577,
+       "precision": 0.31997571341833636,
+       "alerts_per_10k_flows": 151.37728513524692,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.017109834096295577,
+         "wilson_95": [
+          0.016293527402476023,
+          0.017966290866218062
+         ]
+        }
+       }
+      },
+      "0.05": {
+       "fpr": 0.025598290598290597,
+       "recall": 0.029003387335909007,
+       "precision": 0.3091118800461361,
+       "alerts_per_10k_flows": 265.62255861618917,
+       "per_family": {
+        "Infiltration": {
+         "n": 92403,
+         "recall": 0.029003387335909007,
+         "wilson_95": [
+          0.027940765944426404,
+          0.03010516990974308
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "gates": {
+    "exact_twin_test_rows": 25125,
+    "exact_twin_test_fraction": 0.21696329110644802,
+    "exact_twin_attack_rows": 19827,
+    "shuffled_label_ap": 0.28005943492075247,
+    "best_single_feature_index": 60,
+    "best_single_feature_ap": 0.38943584249704627
+   },
+   "seconds": 149.2
+  }
+ ]
+}

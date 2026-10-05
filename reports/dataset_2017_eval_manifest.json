@@ -1,0 +1,28 @@
+{
+  "rows_raw": 2830743,
+  "flow_bytes_nan_filled": 1358,
+  "rows_dropped_inf_rates": 2867,
+  "sentinel_flows_kept": 1439672,
+  "rows_dropped_negative": 150,
+  "rows_dropped_duplicates": 0,
+  "rows_dropped_contradictory_labels": 0,
+  "rows_clean": 2827726,
+  "columns": 73,
+  "label_counts": {
+    "BENIGN": 2271170,
+    "DoS Hulk": 230124,
+    "PortScan": 158804,
+    "DDoS": 128025,
+    "DoS GoldenEye": 10293,
+    "FTP-Patator": 7935,
+    "SSH-Patator": 5897,
+    "DoS slowloris": 5796,
+    "DoS Slowhttptest": 5499,
+    "Bot": 1956,
+    "Web Attack - Brute Force": 1507,
+    "Web Attack - XSS": 652,
+    "Infiltration": 36,
+    "Web Attack - Sql Injection": 21,
+    "Heartbleed": 11
+  }
+}

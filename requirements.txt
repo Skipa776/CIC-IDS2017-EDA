@@ -10,6 +10,7 @@ pyspark>=3.5.0
 
 # Gradient Boosting (optional but recommended)
 lightgbm>=4.0.0
+torch>=2.0.0  # autoencoder (src/models/autoencoder.py)
 
 # Visualization
 matplotlib>=3.7.0

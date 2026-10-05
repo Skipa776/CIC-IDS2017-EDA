@@ -5,10 +5,12 @@ Build the cleaned CICIDS2017 dataset (v2), or CSE-CIC-IDS2018 with the same clea
 Usage:
     python scripts/build_dataset.py              # CIC-IDS2017
     python scripts/build_dataset.py --year 2018  # CSE-CIC-IDS2018 (benign sampled, see src/data/cicids2018.py)
+    python scripts/build_dataset.py --year 2017 --no-dedup  # evaluation copy: keeps repeated flows
 
 Output:
     - data/processed/cicids2017_clean_v2.parquet + reports/dataset_v2_manifest.json
     - data/processed/cicids2018_clean.parquet + reports/dataset_2018_manifest.json
+    - with --no-dedup: data/processed/cicids{2017,2018}_eval.parquet + reports/dataset_{year}_eval_manifest.json
 """
 
 import argparse
@@ -32,15 +34,21 @@ OUTPUTS = {
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", choices=sorted(OUTPUTS), default="2017")
-    year = parser.parse_args().year
+    parser.add_argument("--no-dedup", action="store_true",
+                        help="keep repeated flows and conflicting labels (evaluation copy)")
+    args = parser.parse_args()
+    year = args.year
     PARQUET_PATH, MANIFEST_PATH = OUTPUTS[year]
+    if args.no_dedup:
+        PARQUET_PATH = PROJECT_ROOT / "data" / "processed" / f"cicids{year}_eval.parquet"
+        MANIFEST_PATH = PROJECT_ROOT / "reports" / f"dataset_{year}_eval_manifest.json"
 
     print("Loading raw CSVs...")
     df = load_raw() if year == "2017" else load_raw_2018()
     print(f"  {len(df):,} rows, {df.shape[1]} columns")
 
     print("Cleaning (v2 policy)...")
-    df, manifest = clean(df)
+    df, manifest = clean(df, deduplicate=not args.no_dedup)
     if year == "2018":
         # rows_raw counts sampled benign; every attack flow was kept
         manifest = {"benign_sample_rate": BENIGN_SAMPLE_RATE, **manifest}
