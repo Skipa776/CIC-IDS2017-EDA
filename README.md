@@ -85,6 +85,15 @@ shuffled-label control at chance. The near-perfect score is real but answers an 
   benign flows ([01a](notebooks/01a_eda_overview.ipynb)).
 - **Labels conflict and rows repeat.** 697 distinct flows carry contradictory labels, and nearly
   half of SSH-Patator and PortScan rows are exact repeats.
+- **Each attack family has its own fingerprint.** DoS separates on packet timing, PortScan on reply
+  rate, Heartbleed on huge replies, Bot on small uniform packets. There is no single "attack-ness"
+  to learn, and floods are more regular than benign traffic, not less.
+
+**What follows.** The dataset records the lab's layout (one attack, one day, one victim service)
+and labels flows by attack time window rather than by content. So: split by day, never by random
+rows; treat destination port as a category and check results for single-feature shortcuts; measure
+web attacks on payload-carrying flows; deduplicate inside the training split only; and treat every
+score as an upper bound set by label noise.
 
 ## Data and cleaning
 
