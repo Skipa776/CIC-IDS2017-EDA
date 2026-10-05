@@ -34,37 +34,61 @@ Dataset:            data/processed/cicids2017_clean_v2.parquet (2,519,262 flows)
 
 Split:              Stratified 80/20 split FIRST; benign downsampled to 200k in the
                     training portion only. Test set (503,853 flows) keeps the natural
-                    prevalence (16.9% attack), so PR metrics are deployment-comparable.
+                    prevalence (16.9% attack) within this dataset, not deployment prevalence.
 
 ================================================================================
-3. PERFORMANCE (test set, natural prevalence — model_metadata.json is authoritative)
+3. HISTORICAL ARTIFACT METRICS AND CURRENT EVALUATION STATUS
 ================================================================================
 
-Layer 1 (binary):
-  PR-AUC:           0.9997   (no-skill baseline = 0.169)
-  Precision:        0.982    (false-positive rate on benign: 0.4%)
-  Recall:           0.999
-  Per-attack recall: >= 0.93 for all classes except Infiltration (0.67, n=9)
-                    and SQL Injection (0.60, n=5); full table in metadata.
+Layer 1 random-split scores are archived in model_metadata.json only; they are
+excluded from performance claims. Audit found 1,854 test flows with identical
+20-input vectors in training, plus extensive shared behavior profiles. Global
+label-aware filtering and undocumented training-only feature selection further
+limit that evaluation. See reports/leakage_audit.md and reports/leakage_audit.json.
 
-Layer 1 cross-day holdout (train on other days, test on held-out days):
+Current primary evaluation: scripts/audit_leakage.py starts from all eight raw
+CSV files with feature-only cleaning, retains duplicates/conflicting labels,
+groups related input profiles globally and uses validation-frozen thresholds.
+It also tests purged held-out blocks from every file. The primary candidate uses
+all 71 inputs; the historically selected 20-input subset is a diagnostic.
+These controls improve independence under the stated group proxy, but cannot
+verify session or future-network independence without additional metadata/data.
+
+Raw-derived, profile-purged day tests (71-input candidate, seeds 42/43/44):
+  Friday: AP 0.632-0.680; recall 21.26-45.89%; realized FPR 1.99-2.32%.
+  Wed+Thu: AP 0.221-0.400; recall 0-0.0063%; realized FPR 0.61-0.72%.
+  Forward Thursday: AP 0.0046-0.0051; recall 0.41-0.63%; realized FPR 1.04-1.15%.
+All thresholds target 1% validation benign FPR, then stay frozen for testing.
+These are research candidate metrics, not re-evaluation or replacement of the
+stored 20-input API artifacts. Same-capture grouping/blocking still produces
+strong ranking, so the identified leakage does not explain every high score.
+
+Historical Layer 1 cross-day holdout (v2 parquet, before raw/profile-purge audit):
   test Friday (Bot/PortScan/DDoS unseen):
-    PR-AUC 0.824  (no-skill 0.358)   Precision 0.678   Recall 0.011
+    AP 0.824  (no-skill 0.358)   Precision 0.678   Recall 0.011
   test Wed+Thu (DoS family/web/Heartbleed unseen):
-    PR-AUC 0.466  (no-skill 0.197)   Precision 0.176   Recall 0.041
+    AP 0.466  (no-skill 0.197)   Precision 0.176   Recall 0.041
   (precision and recall at the default 0.5 threshold)
 
   At the default threshold, the model catches only 1-4% of attack flows from
   attack types it never trained on.
 
-  NOTE: In CICIDS2017 each attack type occurs on exactly one day, so cross-day
-  performance measures generalization to UNSEEN ATTACK BEHAVIOR. These numbers,
-  not the random-split PR-AUC, are the realistic expectation for novel attacks.
+  NOTE: Attack labels are tied to capture days. Day holdouts change attack types,
+  benign traffic and capture conditions together; they do not isolate these causes.
+  AP remains above prevalence on both holdouts, while default-threshold recall fails.
+  This is a combined-shift stress test, not an estimate for arbitrary novel attacks.
 
-Layer 2 (multiclass, attacks only):
+  Legacy fixed-FPR results in reports/crossday_threshold_analysis.json choose
+  thresholds on test labels and are retrospective diagnostics, not deployed results.
+  scripts/evaluate_generalization.py reserves a validation day, freezes thresholds,
+  compares 20/71-feature candidates and reports realized test FPR and per-family recall.
+  Results: reports/generalization_evaluation.json. Candidates do not replace these models.
+
+Layer 2 (multiclass, all true test attacks, bypassing the Layer 1 gate):
   Macro F1:         0.910      Weighted F1: 0.997
   Weakest classes:  Web Attack - XSS (F1 0.51), Web Attack - Brute Force (F1 0.58),
                     Web Attack - Sql Injection (F1 0.67, n=5)
+  This is conditional attack identification, not end-to-end gated pipeline performance.
 
 ================================================================================
 4. LIMITATIONS & INTENDED USE
@@ -73,19 +97,29 @@ Layer 2 (multiclass, attacks only):
 - Trained and evaluated on a single 2017 lab-generated dataset with documented label
   noise (Engelen et al. 2021). Absolute metrics do not transfer to other networks.
 - Random-split metrics are optimistic for novel attacks; see cross-day numbers above.
+- Does not transfer to CSE-CIC-IDS2018 (same lab, different network): a Layer 1 model
+  trained the same way on all of CIC-IDS2017 has recall 0.004 at a 1% benign alert
+  retrospective test-benign budget on 2018 (reports/cross_dataset_2018.md).
 - Web-attack identification (Layer 2) is weak; pair with WAF/application logs.
 - Ultra-rare classes (Heartbleed n=11, Infiltration n=36, SQLi n=21 in the full data)
   have anecdotal-quality metrics.
 - Intended as a research/portfolio system, not a production security control.
+- No reliable cross-day generalization has been established. A promotion requires
+  prespecified recall/FPR requirements and fresh captures beyond these explored holdouts.
+- File/day provenance is available, but no session IDs or timestamps for session-level
+  separation or block-based uncertainty. Seed ranges are not population confidence intervals.
 
 ================================================================================
 5. REPRODUCIBILITY
 ================================================================================
 
   python scripts/build_dataset.py      # rebuild data/processed/cicids2017_clean_v2.parquet
-  python scripts/train_models.py       # retrain + write models/ artifacts and metadata
-  pytest tests/                        # 50 tests incl. API contract + MITRE mapping
+  python scripts/audit_leakage.py       # primary raw-file grouped/purged evaluation
+  python scripts/train_models.py       # historical API artifact reproduction only
+  python scripts/evaluate_generalization.py --models lgbm20 lgbm71 logreg20 logreg71 lgbm71_no_network
+  pytest tests/                        # API, evaluation and MITRE mapping checks
   python scripts/validate_eda_baseline.py --data data/processed/cicids2017_clean_v2.parquet --tag _v2
 
-All seeds fixed (random_state=42). Metrics quoted here are from
+Original seeds fixed (random_state=42); controlled evaluation uses 42, 43, 44.
+Metrics quoted for the stored models here are from
 models/model_metadata.json (version 2.0.0, trained 2026-06-12).

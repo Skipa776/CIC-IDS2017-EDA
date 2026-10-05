@@ -109,7 +109,7 @@ def main():
     print(f"   Multi-class labels: {len(label_mapping)} classes")
 
     # Train/test split FIRST (stratified): the test set keeps the natural
-    # benign/attack prevalence, so PR metrics reflect a realistic deployment
+    # benign/attack prevalence within this dataset (not a deployment estimate).
     print("\n3. Splitting data (natural-prevalence test set)...")
     # Benign is downsampled in the TRAINING portion only (efficiency + imbalance)
     idx_train, idx_test = random_split(y_binary)
@@ -153,7 +153,7 @@ def main():
         print(f"   {label:<30s} n={mask.sum():>7,}  flagged={flagged:.3f}")
     layer1_metrics['per_attack_recall'] = per_attack
 
-    # Cross-day holdout: deployment-realistic generalization estimate.
+    # Cross-day stress test: day and attack-family changes are confounded.
     # Each attack type occurs on a single day, so this also measures
     # generalization to unseen attack behavior.
     print("\n7c. Cross-day holdout evaluation (Layer 1)...")

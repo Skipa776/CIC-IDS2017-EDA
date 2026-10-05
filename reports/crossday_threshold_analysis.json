@@ -1,4 +1,6 @@
 {
+  "metric_definition": "average_precision_score (non-interpolated AP)",
+  "threshold_source": "outer test labels; retrospective diagnostic only",
   "features": [
     "Destination Port",
     "Flow Duration",

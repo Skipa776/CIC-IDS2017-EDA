@@ -66,8 +66,12 @@ def _feature_columns(df: pd.DataFrame) -> list:
     return [c for c in df.select_dtypes(include=[np.number]).columns]
 
 
-def clean(df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict]:
-    """Apply the v2 cleaning policy. Returns (cleaned df, manifest of step counts)."""
+def clean(df: pd.DataFrame, deduplicate: bool = True) -> Tuple[pd.DataFrame, Dict]:
+    """Apply feature cleaning, optionally the legacy label-aware deduplication.
+
+    Evaluation from raw captures uses deduplicate=False: duplicates are grouped
+    across partitions and conflicting labels remain in the evaluation population.
+    """
     manifest: Dict = {"rows_raw": int(len(df))}
 
     # 1. Column names and labels
@@ -108,15 +112,18 @@ def clean(df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict]:
 
     # 7. Deduplicate; remove contradictory-label feature vectors entirely
     feature_cols = [c for c in _feature_columns(df) if c != "Label"]
-    before = len(df)
-    df = df.drop_duplicates(subset=feature_cols + ["Label"])
-    manifest["rows_dropped_duplicates"] = int(before - len(df))
+    manifest["rows_dropped_duplicates"] = 0
+    manifest["rows_dropped_contradictory_labels"] = 0
+    if deduplicate:
+        before = len(df)
+        df = df.drop_duplicates(subset=feature_cols + ["Label"])
+        manifest["rows_dropped_duplicates"] = int(before - len(df))
 
-    row_hash = pd.util.hash_pandas_object(df[feature_cols], index=False)
-    labels_per_vector = df.groupby(row_hash.values)["Label"].transform("nunique")
-    before = len(df)
-    df = df[labels_per_vector == 1]
-    manifest["rows_dropped_contradictory_labels"] = int(before - len(df))
+        row_hash = pd.util.hash_pandas_object(df[feature_cols], index=False)
+        labels_per_vector = df.groupby(row_hash.values)["Label"].transform("nunique")
+        before = len(df)
+        df = df[labels_per_vector == 1]
+        manifest["rows_dropped_contradictory_labels"] = int(before - len(df))
 
     df = df.reset_index(drop=True)
 

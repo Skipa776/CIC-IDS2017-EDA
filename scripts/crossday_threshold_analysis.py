@@ -2,6 +2,10 @@
 """
 Cross-day threshold analysis for Layer 1.
 
+RETROSPECTIVE diagnostic: thresholds are chosen using test labels. These
+results describe the held-out ROC curve, not a deployable frozen threshold.
+Use evaluate_generalization.py for validation-frozen threshold evaluation.
+
 The default 0.5 threshold catches only a few percent of attack flows on
 held-out days. This script asks what recall is available at fixed false
 positive rates, using the same splits and Layer 1 training as
@@ -26,11 +30,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import average_precision_score, precision_recall_curve, roc_curve
+from sklearn.metrics import average_precision_score, precision_recall_curve
 
 from scripts.train_models import DATA_PATH_V2, crossday_splits, random_split
 from src.data.loader import get_feature_columns, load_processed_data, prepare_binary_labels
 from src.features.engineering import FAST_FEATURES, create_scaler
+from src.models.evaluate import threshold_at_fpr
 from src.models.train import train_layer1_binary
 
 TARGET_FPRS = [0.001, 0.01, 0.05]
@@ -45,13 +50,6 @@ TITLES = {
     "test_friday": "Friday held out",
     "test_wed_thu": "Wed+Thu held out",
 }
-
-
-def threshold_at_fpr(y_true, scores, target_fpr):
-    """Lowest score threshold whose FPR on benign stays at or below target_fpr."""
-    fpr, tpr, thresholds = roc_curve(y_true, scores, drop_intermediate=False)
-    i = np.searchsorted(fpr, target_fpr, side="right") - 1
-    return float(thresholds[i]), float(fpr[i]), float(tpr[i])
 
 
 def evaluate_split(X, y, labels, tr, te):
@@ -75,6 +73,8 @@ def evaluate_split(X, y, labels, tr, te):
     }
 
     result = {
+        "metric_definition": "average_precision_score (non-interpolated AP)",
+        "threshold_source": "outer test labels; retrospective diagnostic only",
         "n_test": int(len(te)),
         "pr_auc": float(average_precision_score(y_te, scores)),
         "no_skill_pr_auc": float(y_te.mean()),
